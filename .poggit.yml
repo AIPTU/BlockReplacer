@@ -1,0 +1,11 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/AIPTU/BlockReplacer
+branches:
+- master
+projects:
+  BlockReplacer:
+    path: ""
+    icon: "icon.png"
+    libs:
+      - src: ifera-mc/ConfigUpdater/ConfigUpdater
+        version: ^1.2.0
+...
