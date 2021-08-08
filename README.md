@@ -14,4 +14,5 @@ A PocketMine-MP plugin that replaces a block to another block when breaks, then 
 
 # Additional Notes
 
-- If you find bugs or want to give suggestions, please visit [here](https://github.com/AIPTU/BlockReplacer/issues).
+- If you find bugs or want to give suggestions, please visit [here](https://github.com/AIPTU/BlockReplacer/issues)
+- <div>Icons made by <a href="" title="Cursor Creative">Cursor Creative</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
