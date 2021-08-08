@@ -1,2 +1,2 @@
 # BlockReplacer
-A PocketMine-MP plugin that replace your block to another block then replace again to original block
+A PocketMine-MP plugin that replaces a block to another block when breaks, then back to the original block after a certain time
