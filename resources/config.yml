@@ -1,0 +1,28 @@
+---
+# Do not change this (Only for internal use)!
+config-version: 1
+
+# Cooldown used when the block to be replaced with the previous block
+cooldown: 60 #60 seconds 
+
+# If true, the drop will be automatically added to your inventory
+auto-pickup: true
+
+blocks:
+  - "minecraft:coal_ore"
+  - "minecraft:diamond_ore"
+  - "minecraft:emerald_ore"
+  - "minecraft:gold_ore"
+  - "minecraft:iron_ore"
+  - "minecraft:lapis_ore" 
+  - "minecraft:redstone_ore"
+  
+blocks-replace: "minecraft:bedrock"
+
+# This is used if you want block to bedrock work in certain world names
+# Empty it if you want block to bedrock work in all over the world names
+# example:
+# worlds:
+#   - "exampleworld"
+worlds: []
+...
