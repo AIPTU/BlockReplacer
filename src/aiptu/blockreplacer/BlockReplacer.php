@@ -18,9 +18,10 @@ class BlockReplacer extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", 1);
         $this->saveDefaultConfig();
-        foreach ($this->getConfig()->getAll()["blocks"] as $value) {
-            Item::fromString((string) $value);
-        }
+        foreach ($this->getConfig()->getAll()["blocks"] as $value) {
+            Item::fromString((string) $value);
+
+        }
         Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
     }
     
@@ -35,9 +36,17 @@ class BlockReplacer extends PluginBase implements Listener {
         if (!$event->getBlock()->isCompatibleWithTool($event->getItem())) return;
         if (!isset($this->getConfig()->getAll()["blocks"])) return;
         if (empty($this->getConfig()->get("blocks-replace", "minecraft:bedrock"))) return;
-        $blockReplace = Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
+        $blockReplace = Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock") );
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
-            if ($block->getId() === Item::fromString((string) $value)->getId() and $block->getDamage() === Item::fromString((string) $value)->getDamage()) {
+            $explode = explode("#", $value);
+            $customreplace = null;
+            if(count($explode) === 1){
+                $bblock = Item::fromString((string) $value);
+            } elseif(count($explode) === 2) {
+                $bblock = Item::fromString((string) $explode[0]);
+                $customreplace = Item::fromString((string) $explode[1]);
+            }
+            if ($block->getId() === $bblock->getId() and $block->getDamage() === $bblock->getDamage()) {
                 if (!$block instanceof Solid) return;
                 if (in_array($block->getLevelNonNull()->getFolderName(), $this->getConfig()->getAll()["worlds"])) return;
                 foreach ($event->getDrops() as $drops) {
@@ -54,7 +63,11 @@ class BlockReplacer extends PluginBase implements Listener {
                     }
                 }
                 $event->setCancelled();
-                $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($blockReplace->getId(), $blockReplace->getDamage()));
+                if($customreplace === null){
+                    $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($blockReplace->getId(), $blockReplace->getDamage()));
+                } else {
+                    $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($customreplace->getId(), $customreplace->getDamage()));
+                }
                 $this->getScheduler()->scheduleDelayedTask(new ClosureTask(
                     function(int $currentTick) use ($block) : void {
                         $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($block->getId(), $block->getDamage()));
