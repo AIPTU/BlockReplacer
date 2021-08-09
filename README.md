@@ -1,9 +1,9 @@
 # BlockReplacer
 [![GitHub license](https://img.shields.io/github/license/AIPTU/BlockReplacer.svg)](https://github.com/AIPTU/BlockReplacer/blob/master/LICENSE)
 [![Poggit-CI](https://poggit.pmmp.io/ci.shield/AIPTU/BlockReplacer/BlockReplacer)](https://poggit.pmmp.io/ci/AIPTU/BlockReplacer/BlockReplacer)
+[![Poggit-Download](https://poggit.pmmp.io/shield.dl/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
 
 A PocketMine-MP plugin that replaces a block to another block when breaks, then back to the original block after a certain time
-
 
 # How to Install
 
@@ -11,6 +11,10 @@ A PocketMine-MP plugin that replaces a block to another block when breaks, then 
 2. Put the BlockReplacer`.phar` file into the `plugins` folder.
 3. Restart the server.
 4. Done!
+
+# Video
+
+![BlockReplacer](https://github.com/AIPTU/BlockReplacer/blob/master/video.mp4)
 
 # Additional Notes
 
