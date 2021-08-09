@@ -1,5 +1,5 @@
 # BlockReplacer
-[![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/urQt6ETgYu)
+[![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/EggNF9hvGv)
 [![GitHub license](https://img.shields.io/github/license/AIPTU/BlockReplacer.svg)](https://github.com/AIPTU/BlockReplacer/blob/master/LICENSE)
 [![Poggit-CI](https://poggit.pmmp.io/ci.shield/AIPTU/BlockReplacer/BlockReplacer)](https://poggit.pmmp.io/ci/AIPTU/BlockReplacer/BlockReplacer)
 [![Poggit-Download](https://poggit.pmmp.io/shield.dl/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
