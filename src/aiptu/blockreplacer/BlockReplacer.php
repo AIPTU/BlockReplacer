@@ -19,8 +19,13 @@ class BlockReplacer extends PluginBase implements Listener {
         ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", 1);
         $this->saveDefaultConfig();
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
-            Item::fromString((string) $value);
-
+            $explode = explode("×", $value);
+            if(count($explode) === 1){
+                Item::fromString((string) $value);
+            } elseif(count($explode) === 2){
+                Item::fromString((string) $explode[0]);
+                Item::fromString((string) $explode[1]);
+            }
         }
         Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
     }
@@ -36,9 +41,9 @@ class BlockReplacer extends PluginBase implements Listener {
         if (!$event->getBlock()->isCompatibleWithTool($event->getItem())) return;
         if (!isset($this->getConfig()->getAll()["blocks"])) return;
         if (empty($this->getConfig()->get("blocks-replace", "minecraft:bedrock"))) return;
-        $blockReplace = Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock") );
+        $blockReplace = Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
-            $explode = explode("#", $value);
+            $explode = explode("×", $value);
             $customreplace = null;
             if(count($explode) === 1){
                 $bblock = Item::fromString((string) $value);
