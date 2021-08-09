@@ -25,6 +25,7 @@ class BlockReplacer extends PluginBase implements Listener {
             foreach ($this->getConfig()->getAll()["blocks"] as $value) {
                 (Item::fromString((string) $value)->getId() and Item::fromString((string) $value)->getDamage());
             }
+            Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
         } catch(RuntimeException $e) {
             throw new PluginException($e->getMessage());
         }
@@ -41,7 +42,7 @@ class BlockReplacer extends PluginBase implements Listener {
         if (!$event->getBlock()->isCompatibleWithTool($event->getItem())) return;
         if (!isset($this->getConfig()->getAll()["blocks"])) return;
         if (empty($this->getConfig()->get("blocks-replace", "minecraft:bedrock"))) return;
-        $blockReplace = Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock") );
+        $blockReplace = Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
             if ($block->getId() === Item::fromString((string) $value)->getId() and $block->getDamage() === Item::fromString((string) $value)->getDamage()) {
                 if (!$block instanceof Solid) return;
