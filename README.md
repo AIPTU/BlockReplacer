@@ -13,6 +13,10 @@ A PocketMine-MP plugin that replaces a block to another block when breaks, then 
 3. Restart the server.
 4. Done!
 
+# Permissions
+
+• Permission `blockreplacer.bypass` allows users to bypass block replaces
+
 # Additional Notes
 
 - If you find bugs or want to give suggestions, please visit [here](https://github.com/AIPTU/BlockReplacer/issues)
