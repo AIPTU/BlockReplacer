@@ -45,7 +45,7 @@ class BlockReplacer extends PluginBase implements Listener {
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
             $explode = explode("×", $value);
             $customreplace = null;
-            if(count($explode) === 1) {
+            if (count($explode) === 1) {
                 $bblock = Item::fromString((string) $value);
             } elseif (count($explode) === 2) {
                 $bblock = Item::fromString((string) $explode[0]);
