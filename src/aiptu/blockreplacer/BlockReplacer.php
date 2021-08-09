@@ -20,9 +20,9 @@ class BlockReplacer extends PluginBase implements Listener {
         $this->saveDefaultConfig();
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
             $explode = explode("×", $value);
-            if(count($explode) === 1){
+            if (count($explode) === 1) {
                 Item::fromString((string) $value);
-            } elseif(count($explode) === 2){
+            } elseif (count($explode) === 2) {
                 Item::fromString((string) $explode[0]);
                 Item::fromString((string) $explode[1]);
             }
@@ -45,9 +45,9 @@ class BlockReplacer extends PluginBase implements Listener {
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
             $explode = explode("×", $value);
             $customreplace = null;
-            if(count($explode) === 1){
+            if(count($explode) === 1) {
                 $bblock = Item::fromString((string) $value);
-            } elseif(count($explode) === 2) {
+            } elseif (count($explode) === 2) {
                 $bblock = Item::fromString((string) $explode[0]);
                 $customreplace = Item::fromString((string) $explode[1]);
             }
@@ -68,7 +68,7 @@ class BlockReplacer extends PluginBase implements Listener {
                     }
                 }
                 $event->setCancelled();
-                if($customreplace === null){
+                if (is_null($customreplace)) {
                     $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($blockReplace->getId(), $blockReplace->getDamage()));
                 } else {
                     $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($customreplace->getId(), $customreplace->getDamage()));
