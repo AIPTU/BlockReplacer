@@ -10,6 +10,8 @@ cooldown: 60
 auto-pickup: true
 
 # Block the id to be replaced
+# Block must be solid
+# If block has meta or damage you can use "minecraft:ids:meta"
 blocks:
   - "minecraft:coal_ore"
   - "minecraft:diamond_ore"
@@ -18,8 +20,11 @@ blocks:
   - "minecraft:iron_ore"
   - "minecraft:lapis_ore" 
   - "minecraft:redstone_ore"
+  - "minecraft:17:0" # Oak log
 
 # Block replacement ids
+# Block must be solid
+# If block has meta or damage you can use "minecraft:ids:meta"
 blocks-replace: "minecraft:bedrock"
 
 # This is used if you want block replaces work in certain world names
