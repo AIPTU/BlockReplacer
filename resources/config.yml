@@ -12,10 +12,10 @@ auto-pickup: true
 # Block the id to be replaced
 # Block must be solid
 # If block has meta or damage you can use "minecraft:ids:meta"
-# Use # to create Custom replacements,
-# for example: "minecraft:cobblestone×minecraft:stone"
-# The first part of the column above (Minecraft:cobblestone) is as a block that is destroyed
-# While in the second column (minecraft:stone) is a replacement Custom block
+# Use × to create custom replacements
+# example: "minecraft:cobblestone×minecraft:stone"
+# The first part of the column above (minecraft:cobblestone) is as a block that is destroyed
+# While in the second column (minecraft:stone) is a replacement custom block
 blocks:
   - "minecraft:coal_ore"
   - "minecraft:diamond_ore"
@@ -24,6 +24,7 @@ blocks:
   - "minecraft:iron_ore"
   - "minecraft:lapis_ore" 
   - "minecraft:redstone_ore"
+  # Cobblestone to Stone
   - "minecraft:cobblestone×minecraft:stone"
   - "minecraft:17:0" # Oak log
 

@@ -44,14 +44,15 @@ class BlockReplacer extends PluginBase implements Listener {
         $blockReplace = Item::fromString((string) $this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
         foreach ($this->getConfig()->getAll()["blocks"] as $value) {
             $explode = explode("×", $value);
-            $customreplace = null;
+            $replaceBlock = null;
+            $customReplace  = null;
             if (count($explode) === 1) {
-                $bblock = Item::fromString((string) $value);
+                $replaceBlock = Item::fromString((string) $value);
             } elseif (count($explode) === 2) {
-                $bblock = Item::fromString((string) $explode[0]);
-                $customreplace = Item::fromString((string) $explode[1]);
+                $replaceBlock = Item::fromString((string) $explode[0]);
+                $customReplace  = Item::fromString((string) $explode[1]);
             }
-            if ($block->getId() === $bblock->getId() and $block->getDamage() === $bblock->getDamage()) {
+            if ($block->getId() === $replaceBlock->getId() and $block->getDamage() === $replaceBlock->getDamage()) {
                 if (!$block instanceof Solid) return;
                 if (in_array($block->getLevelNonNull()->getFolderName(), $this->getConfig()->getAll()["worlds"])) return;
                 if (!$player->hasPermission("blockreplacer.bypass")) return;
@@ -69,10 +70,10 @@ class BlockReplacer extends PluginBase implements Listener {
                     }
                 }
                 $event->setCancelled();
-                if (is_null($customreplace)) {
+                if (is_null($customReplace )) {
                     $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($blockReplace->getId(), $blockReplace->getDamage()));
                 } else {
-                    $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($customreplace->getId(), $customreplace->getDamage()));
+                    $block->getLevelNonNull()->setBlock($block->asVector3(), Block::get($customReplace ->getId(), $customReplace ->getDamage()));
                 }
                 $this->getScheduler()->scheduleDelayedTask(new ClosureTask(
                     function(int $currentTick) use ($block) : void {
