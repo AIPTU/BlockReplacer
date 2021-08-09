@@ -54,6 +54,7 @@ class BlockReplacer extends PluginBase implements Listener {
             if ($block->getId() === $bblock->getId() and $block->getDamage() === $bblock->getDamage()) {
                 if (!$block instanceof Solid) return;
                 if (in_array($block->getLevelNonNull()->getFolderName(), $this->getConfig()->getAll()["worlds"])) return;
+                if (!$player->hasPermission("blockreplacer.bypass")) return;
                 foreach ($event->getDrops() as $drops) {
                     if ((bool) $this->getConfig()->get("auto-pickup", true)) {
                         if ($player->getInventory()->canAddItem($drops)) {
