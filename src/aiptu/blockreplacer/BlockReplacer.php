@@ -11,7 +11,9 @@ use pocketmine\event\Listener;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\PluginException;
 use pocketmine\scheduler\ClosureTask;
+use RuntimeException;
 
 class BlockReplacer extends PluginBase implements Listener {
     
@@ -19,6 +21,13 @@ class BlockReplacer extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", 1);
         $this->saveDefaultConfig();
+        try{
+            foreach ($this->getConfig()->getAll()["blocks"] as $value) {
+                (Item::fromString((string) $value)->getId() and Item::fromString((string) $value)->getDamage());
+            }
+        } catch(RuntimeException $e) {
+            throw new PluginException($e->getMessage());
+        }
     }
     
     /**
