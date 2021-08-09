@@ -7,8 +7,8 @@ A PocketMine-MP plugin that replaces a block to another block when breaks, then 
 
 # How to Install
 
-1. Download the plugin from here [here](https://poggit.pmmp.io/ci/AIPTU/BlockReplacer/BlockReplacer)
-2. Put the BlockReplacer`.phar` file into the `plugins` folder.
+1. Download the plugin from here [here](https://poggit.pmmp.io/p/BlockReplacer)
+2. Put the `BlockReplacer.phar` file into the `plugins` folder.
 3. Restart the server.
 4. Done!
 
