@@ -24,7 +24,7 @@ blocks:
   - "minecraft:iron_ore"
   - "minecraft:lapis_ore" 
   - "minecraft:redstone_ore"
-  - "Minecraft:cobblestone×minecraft:stone"
+  - "minecraft:cobblestone×minecraft:stone"
   - "minecraft:17:0" # Oak log
 
 # Block replacement ids
