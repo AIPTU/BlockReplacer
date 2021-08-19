@@ -64,7 +64,7 @@ class BlockReplacer extends PluginBase implements Listener{
         }
         try{
             if(empty($this->getConfig()->get("blocks-replace", "minecraft:bedrock"))) return;
-            $r = ItemFactory::fromString((string)$this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
+            $i = ItemFactory::fromString((string)$this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
         }catch(\InvalidArgumentException $e){
             $this->getLogger()->error("Could not parse " . $i . " as a valid item, disable plugin...");
             $this->getServer()->getPluginManager()->disablePlugin($this);
