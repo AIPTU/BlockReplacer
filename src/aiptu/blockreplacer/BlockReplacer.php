@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace aiptu\blockreplacer;
 
 use JackMD\ConfigUpdater\ConfigUpdater;
+use JackMD\UpdateNotifier\UpdateNotifier;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\Solid;
 use pocketmine\item\ItemFactory;
@@ -21,6 +22,7 @@ class BlockReplacer extends PluginBase implements Listener{
     
     public function onEnable() : void{
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
     }
     
     private function checkConfig() : void{
@@ -62,6 +64,7 @@ class BlockReplacer extends PluginBase implements Listener{
                 return;
             }
         }
+        $i = null;
         try{
             if(empty($this->getConfig()->get("blocks-replace", "minecraft:bedrock"))) return;
             $i = ItemFactory::fromString((string)$this->getConfig()->get("blocks-replace", "minecraft:bedrock"));
