@@ -13,15 +13,16 @@ auto-pickup: true
 # Block the id to be replaced
 # Block must be solid
 # If block has meta or damage you can use "minecraft:ids:meta"
-# Use "×" for per custom blocks replace, example "minecraft:cobblestone×minecraft:stone" Cobblestone -> Stone
+# Use "=" for per custom blocks replace, example "minecraft:cobblestone=minecraft:stone" Cobblestone -> Stone
 blocks:
   - "minecraft:coal_ore"
   - "minecraft:diamond_ore"
   - "minecraft:gold_ore"
   - "minecraft:iron_ore"
-  - "minecraft:17:0" # Oak log
-  - "minecraft:17:1" 
-  - "minecraft:cobblestone×minecraft:stone" # Cobblestone -> Stone
+  - "minecraft:17:0" # Oak wood
+  - "minecraft:17:1" # Spruce wood
+  - "minecraft:cobblestone=minecraft:stone" # Cobblestone -> Stone
+  - "minecraft:dirt=minecraft:grass" # Dirt -> Grass
 
 # Block replacement ids
 # Block must be solid
