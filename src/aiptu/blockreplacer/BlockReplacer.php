@@ -23,7 +23,7 @@ class BlockReplacer extends PluginBase implements Listener {
 
     private function checkConfig() : void {
         $this->saveDefaultConfig();
-        ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", 1);
+        ConfigUpdater::checkUpdate($this, $this->getConfig(), "config-version", 2);
         foreach ([
             "cooldown" => "integer",
             "auto-pickup" => "boolean",

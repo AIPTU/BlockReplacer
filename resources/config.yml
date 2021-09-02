@@ -1,6 +1,6 @@
 ---
 # Do not change this (Only for internal use)!
-config-version: 1
+config-version: 2
 
 # Cooldown used when the block to be replaced with the previous block.
 # Default: 60 seconds.
