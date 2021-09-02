@@ -4,10 +4,6 @@ main: aiptu\blockreplacer\BlockReplacer
 version: 1.0.0
 api: 3.21.0
 author: AIPTU
-
-extensions:
-  Core: ">=7.4"
-  
 permissions:
   blockreplacer.bypass:
     default: op
