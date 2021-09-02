@@ -1,14 +1,29 @@
 # BlockReplacer
+
 [![Discord](https://img.shields.io/discord/830063409000087612?color=7389D8&label=discord)](https://discord.com/invite/EggNF9hvGv)
 [![GitHub license](https://img.shields.io/github/license/AIPTU/BlockReplacer.svg)](https://github.com/AIPTU/BlockReplacer/blob/master/LICENSE)
 [![Poggit-CI](https://poggit.pmmp.io/ci.shield/AIPTU/BlockReplacer/BlockReplacer)](https://poggit.pmmp.io/ci/AIPTU/BlockReplacer/BlockReplacer)
 [![Poggit-Download](https://poggit.pmmp.io/shield.dl/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
 
-A PocketMine-MP plugin that replaces a block to another block when breaks, then back to the original block after a certain time
+A PocketMine-MP plugin that replaces a block to another block when breaks, then back to the original block after a certain time.
+
+# Features
+
+- Permissions bypass.
+- Custom block replaces.
+- Custom cooldown replaces.
+- Auto pickup support.
+- Auto update checker.
+- Per world support.
+- Lightweight and open source ❤️
+
+# Permissions
+
+- Permission `blockreplacer.bypass` allows users to bypass block replaces.
 
 # How to Install
 
-1. Download the plugin from here [here](https://poggit.pmmp.io/p/BlockReplacer)
+1. Download the plugin from [here](https://poggit.pmmp.io/p/BlockReplacer)
 2. Put the `BlockReplacer.phar` file into the `plugins` folder.
 3. Restart the server.
 4. Done!
@@ -16,7 +31,7 @@ A PocketMine-MP plugin that replaces a block to another block when breaks, then 
 # Additional Notes
 
 - If you find bugs or want to give suggestions, please visit [here](https://github.com/AIPTU/BlockReplacer/issues)
-- <div>Icons made from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+- Icons made from [www.flaticon.com](https://www.flaticon.com)
 
 # License
 

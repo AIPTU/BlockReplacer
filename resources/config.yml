@@ -2,28 +2,33 @@
 # Do not change this (Only for internal use)!
 config-version: 1
 
-# Cooldown used when the block to be replaced with the previous block
-# Default: 60 seconds
+# Cooldown used when the block to be replaced with the previous block.
+# Default: 60 seconds.
 cooldown: 60 
 
-# If true, the drop will be automatically added to your inventory
+# Drop will be automatically added to your inventory.
+# Default: true.
 auto-pickup: true
 
-# Block the id to be replaced
+# Block the id to be replaced, you can see https://www.digminecraft.com/lists/item_id_list_pe.php for list block ids and block must be solid.
+# If block has meta or damage you can use "minecraft:ids:meta".
+# Use "=" for per custom blocks replace, example "minecraft:cobblestone=minecraft:stone" Cobblestone -> Stone.
 blocks:
   - "minecraft:coal_ore"
   - "minecraft:diamond_ore"
-  - "minecraft:emerald_ore"
   - "minecraft:gold_ore"
   - "minecraft:iron_ore"
-  - "minecraft:lapis_ore" 
-  - "minecraft:redstone_ore"
+  - "minecraft:log" # Oak log.
+  - "minecraft:log:1" # Spruce log.
+  - "minecraft:cobblestone=minecraft:stone" # Cobblestone -> Stone.
+  - "minecraft:dirt=minecraft:grass" # Dirt -> Grass.
 
-# Block replacement ids
+# Block replacement ids, you can see https://www.digminecraft.com/lists/item_id_list_pe.php for list block ids and block must be solid.
+# If block has meta or damage you can use "minecraft:ids:meta".
 blocks-replace: "minecraft:bedrock"
 
-# This is used if you want block replaces work in certain world names
-# Empty it if you want block replaces work in all over the world names
+# This is used if you want block replaces work in certain world folder names.
+# Empty it if you want block replaces work in all over the world folder names.
 # example:
 # worlds:
 #   - "exampleworld"
