@@ -2,17 +2,18 @@
 # Do not change this (Only for internal use)!
 config-version: 2
 
-# Cooldown used when the block to be replaced with the previous block.
-# Default: 60 seconds.
+# The total amount of time in seconds that the block will be replaced with the previous block.
 cooldown: 60 
 
-# Drop will be automatically added to your inventory.
-# Default: true.
+# Dropped items will be automatically added to the player's inventory.
+# If the player's inventory is full, the item will automatically be dropped near the player.
 auto-pickup: true
 
-# Block the id to be replaced, you can see https://www.digminecraft.com/lists/item_id_list_pe.php for list block ids and block must be solid.
-# If block has meta or damage you can use "minecraft:ids:meta".
-# Use "=" for per custom blocks replace, example "minecraft:cobblestone=minecraft:stone" Cobblestone -> Stone.
+# List of blocks to be replaced.
+# If the block has meta or damage, you can use the format "minecraft:id:meta/damage".
+# If you want some blocks to be replaced differently, you can use the format "minecraft:id:meta/damage=minecraft:id:meta/damage".
+# You can see the block id and meta list in https://www.digminecraft.com/lists/item_id_list_pe.php
+# Note: Block must be SOLID to work.
 blocks:
   - "minecraft:coal_ore"
   - "minecraft:diamond_ore"
@@ -20,17 +21,22 @@ blocks:
   - "minecraft:iron_ore"
   - "minecraft:log" # Oak log.
   - "minecraft:log:1" # Spruce log.
-  - "minecraft:cobblestone=minecraft:stone" # Cobblestone -> Stone.
-  - "minecraft:dirt=minecraft:grass" # Dirt -> Grass.
+  - "minecraft:cobblestone=minecraft:stone" # Cobblestone will be replaced to Stone.
+  - "minecraft:dirt=minecraft:grass" # Dirt will be replaced to Grass.
 
-# Block replacement ids, you can see https://www.digminecraft.com/lists/item_id_list_pe.php for list block ids and block must be solid.
-# If block has meta or damage you can use "minecraft:ids:meta".
+# Default block to be used as a replacement.
+# If the block has meta or damage, you can use the format "minecraft:id:meta/damage".
+# You can see the block id and meta list in https://www.digminecraft.com/lists/item_id_list_pe.php
+# Note: Block must be SOLID to work.
 blocks-replace: "minecraft:bedrock"
 
-# This is used if you want block replaces work in certain world folder names.
-# Empty it if you want block replaces work in all over the world folder names.
-# example:
-# worlds:
-#   - "exampleworld"
-worlds: []
+# The mode can be either "blacklist" or "whitelist".
+# Blacklist mode will not replace blocks according to predefined world folder names and will replace blocks in all worlds.
+# Whitelist mode will only replace blocks according to predefined world folder names and will not replace blocks in all worlds.
+mode: "blacklist"
+
+# List of world folder names to blacklist/whitelist (depending on the mode set above).
+# Set it to [] if you want to replace the block in all worlds.
+worlds:
+  - "world"
 ...

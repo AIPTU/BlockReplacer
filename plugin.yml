@@ -2,10 +2,10 @@
 name: BlockReplacer
 main: aiptu\blockreplacer\BlockReplacer
 version: 1.1.0
-api: 3.21.0
+api: [3.24.0]
 author: AIPTU
 permissions:
   blockreplacer.bypass:
     default: op
-    description: Allows users to bypass block replaces
+    description: Allows users to bypass block replacement.
 ...

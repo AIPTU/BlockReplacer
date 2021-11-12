@@ -7,8 +7,6 @@ projects:
     path: ""
     icon: "icon.png"
     libs:
-      - src: ifera-mc/ConfigUpdater/ConfigUpdater
-        version: ^1.2.0
       - src: ifera-mc/UpdateNotifier/UpdateNotifier
         version: ^2.1.0
 ...
