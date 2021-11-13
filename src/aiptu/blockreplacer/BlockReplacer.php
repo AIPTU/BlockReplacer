@@ -6,12 +6,13 @@ namespace aiptu\blockreplacer;
 
 use JackMD\UpdateNotifier\UpdateNotifier;
 use pocketmine\block\BlockFactory;
-use pocketmine\block\Solid;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\item\ItemFactory;
+use pocketmine\level\Level;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
+use function class_exists;
 use function count;
 use function explode;
 use function gettype;
@@ -27,6 +28,12 @@ class BlockReplacer extends PluginBase implements Listener
 
     public function onEnable(): void
     {
+        if (!class_exists(UpdateNotifier::class)) {
+            $this->getLogger()->error('UpdateNotifier virion not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer for a pre-compiled phar');
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+            return;
+        }
+
         $this->checkConfig();
 
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -42,6 +49,7 @@ class BlockReplacer extends PluginBase implements Listener
 
         $block = $event->getBlock();
         $player = $event->getPlayer();
+        $world = $block->getLevelNonNull();
 
         if (!$block->isCompatibleWithTool($event->getItem())) {
             return;
@@ -66,11 +74,7 @@ class BlockReplacer extends PluginBase implements Listener
             }
 
             if ($block->getId() === $replaceBlock->getId() && $block->getDamage() === $replaceBlock->getDamage()) {
-                if (!$block instanceof Solid) {
-                    return;
-                }
-
-                if (!$this->checkWorlds($block)) {
+                if (!$this->checkWorlds($world)) {
                     return;
                 }
 
@@ -80,29 +84,29 @@ class BlockReplacer extends PluginBase implements Listener
 
                 foreach ($event->getDrops() as $drops) {
                     if ((bool) $this->getConfig()->get('auto-pickup', true)) {
-                        (!$player->getInventory()->canAddItem($drops)) ? ($block->getLevelNonNull()->dropItem($block->asVector3(), $drops)) : ($player->getInventory()->addItem($drops));
-                        (!$player->canPickupXp()) ? ($block->getLevelNonNull()->dropExperience($block->asVector3(), $event->getXpDropAmount())) : ($player->addXp($event->getXpDropAmount()));
+                        (!$player->getInventory()->canAddItem($drops)) ? ($world->dropItem($block, $drops)) : ($player->getInventory()->addItem($drops));
+                        (!$player->canPickupXp()) ? ($world->dropExperience($block, $event->getXpDropAmount())) : ($player->addXp($event->getXpDropAmount()));
 
                         continue;
                     }
 
-                    $block->getLevelNonNull()->dropItem($block->asVector3(), $drops);
-                    $block->getLevelNonNull()->dropExperience($block->asVector3(), $event->getXpDropAmount());
+                    $world->dropItem($block, $drops);
+                    $world->dropExperience($block, $event->getXpDropAmount());
                 }
 
                 $event->setCancelled();
 
-                $block->getLevelNonNull()->setBlock($block->asVector3(), BlockFactory::get($blockReplace->getId(), $blockReplace->getDamage()));
+                $world->setBlock($block, BlockFactory::get($blockReplace->getId(), $blockReplace->getDamage()));
 
                 if ($customReplace === null) {
-                    $block->getLevelNonNull()->setBlock($block->asVector3(), BlockFactory::get($blockReplace->getId(), $blockReplace->getDamage()));
+                    $world->setBlock($block, BlockFactory::get($blockReplace->getId(), $blockReplace->getDamage()));
                 } else {
-                    $block->getLevelNonNull()->setBlock($block->asVector3(), BlockFactory::get($customReplace->getId(), $customReplace->getDamage()));
+                    $world->setBlock($block, BlockFactory::get($customReplace->getId(), $customReplace->getDamage()));
                 }
 
                 $this->getScheduler()->scheduleDelayedTask(new ClosureTask(
-                    function (int $currentTick) use ($block): void {
-                        $block->getLevelNonNull()->setBlock($block->asVector3(), BlockFactory::get($block->getId(), $block->getDamage()));
+                    function (int $currentTick) use ($block, $world): void {
+                        $world->setBlock($block, BlockFactory::get($block->getId(), $block->getDamage()));
                     }
                 ), 20 * $this->getConfig()->get('cooldown', 60));
             }
@@ -167,14 +171,12 @@ class BlockReplacer extends PluginBase implements Listener
         }
     }
 
-    private function checkWorlds(Solid $block): bool
+    private function checkWorlds(Level $world): bool
     {
-        $world = $block->getLevelNonNull()->getFolderName();
-
         if ($this->mode === self::MODE_BLACKLIST) {
-            return !(in_array($world, $this->getConfig()->getAll()['worlds'], true));
+            return !(in_array($world->getFolderName(), $this->getConfig()->getAll()['worlds'], true));
         }
 
-        return (in_array($world, $this->getConfig()->getAll()['worlds'], true));
+        return in_array($world->getFolderName(), $this->getConfig()->getAll()['worlds'], true);
     }
 }

@@ -12,8 +12,6 @@ auto-pickup: true
 # List of blocks to be replaced.
 # If the block has meta or damage, you can use the format "minecraft:id:meta/damage".
 # If you want some blocks to be replaced differently, you can use the format "minecraft:id:meta/damage=minecraft:id:meta/damage".
-# You can see the block id and meta list in https://www.digminecraft.com/lists/item_id_list_pe.php
-# Note: Block must be SOLID to work.
 blocks:
   - "minecraft:coal_ore"
   - "minecraft:diamond_ore"
@@ -26,8 +24,6 @@ blocks:
 
 # Default block to be used as a replacement.
 # If the block has meta or damage, you can use the format "minecraft:id:meta/damage".
-# You can see the block id and meta list in https://www.digminecraft.com/lists/item_id_list_pe.php
-# Note: Block must be SOLID to work.
 blocks-replace: "minecraft:bedrock"
 
 # The mode can be either "blacklist" or "whitelist".
