@@ -1,6 +1,6 @@
 ---
 # Do not change this (Only for internal use)!
-config-version: 2
+config-version: 3
 
 # The total amount of time in seconds that the block will be replaced with the previous block.
 cooldown: 60 
