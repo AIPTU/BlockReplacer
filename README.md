@@ -1,9 +1,9 @@
 # BlockReplacer
 
 [![Discord](https://img.shields.io/discord/830063409000087612?color=7389D8&label=discord)](https://discord.com/invite/EggNF9hvGv)
-[![GitHub license](https://img.shields.io/github/license/AIPTU/BlockReplacer.svg)](https://github.com/AIPTU/BlockReplacer/blob/master/LICENSE)
-[![Poggit-CI](https://poggit.pmmp.io/ci.shield/AIPTU/BlockReplacer/BlockReplacer)](https://poggit.pmmp.io/ci/AIPTU/BlockReplacer/BlockReplacer)
-[![Poggit-Download](https://poggit.pmmp.io/shield.dl/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
+[![GitHub License](https://img.shields.io/github/license/AIPTU/BlockReplacer.svg)](https://github.com/AIPTU/BlockReplacer/blob/master/LICENSE)
+[![Poggit State](https://poggit.pmmp.io/shield.state/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
+[![Poggit Download Total](https://poggit.pmmp.io/shield.dl.total/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
 
 A PocketMine-MP plugin that replaces a block to another block when breaks, then back to the original block after a certain time.
 
