@@ -7,7 +7,8 @@ projects:
     path: ""
     icon: "icon.png"
     libs:
-      - src: ifera-mc/UpdateNotifier/UpdateNotifier
+      UpdateNotifier:
+        src: ifera-mc/UpdateNotifier/UpdateNotifier
         branch: "API-4.0.0"
         version: ^2.2.0
 ...
