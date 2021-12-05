@@ -1,8 +1,9 @@
 ---
 name: BlockReplacer
 main: aiptu\blockreplacer\BlockReplacer
+src-namespace-prefix: aiptu\blockreplacer
 version: 1.2.0
-api: [3.24.0]
+api: [4.0.0]
 author: AIPTU
 permissions:
   blockreplacer.bypass:

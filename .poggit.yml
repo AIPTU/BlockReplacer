@@ -8,8 +8,6 @@ projects:
     icon: "icon.png"
     libs:
       - src: ifera-mc/UpdateNotifier/UpdateNotifier
-        version: ^2.1.0
-    lint:
-      phpstan: false
-      syntaxError: false
+        version: ^2.2.0
+        branch: API-4.0.0
 ...
