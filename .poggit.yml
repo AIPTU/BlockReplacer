@@ -8,6 +8,6 @@ projects:
     icon: "icon.png"
     libs:
       - src: ifera-mc/UpdateNotifier/UpdateNotifier
+        branch: "API-4.0.0"
         version: ^2.2.0
-        branch: API-4.0.0
 ...
