@@ -1,6 +1,6 @@
 ---
 # Do not change this (Only for internal use)!
-config-version: 3
+config-version: 4
 
 # Whether to check for plugin updates
 check-update: true

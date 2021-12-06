@@ -5,13 +5,13 @@
 [![Poggit State](https://poggit.pmmp.io/shield.state/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
 [![Poggit Download Total](https://poggit.pmmp.io/shield.dl.total/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
 
-A PocketMine-MP plugin that replaces a block to another block when breaks, then back to the original block after a certain time.
+A PocketMine-MP plugin which replaces block to another block at predefined time.
 
 # Features
 
-- Permissions bypass.
-- Custom block replaces.
-- Custom cooldown replaces.
+- Permission bypass.
+- Custom block replacement.
+- Custom cooldown replacement.
 - Auto pickup support.
 - Auto update checker.
 - Per world support.
@@ -19,7 +19,7 @@ A PocketMine-MP plugin that replaces a block to another block when breaks, then 
 
 # Permissions
 
-- Permission `blockreplacer.bypass` allows users to bypass block replaces.
+- Permission `blockreplacer.bypass` allows users to bypass block replacement.
 
 # How to Install
 

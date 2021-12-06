@@ -110,7 +110,7 @@ final class BlockReplacer extends PluginBase implements Listener
 	{
 		$this->saveDefaultConfig();
 
-		if ($this->getConfig()->get('config-version', 3) !== 3) {
+		if ($this->getConfig()->get('config-version', 4) !== 4) {
 			$this->getLogger()->notice('Your configuration file is outdated, updating the config.yml...');
 			$this->getLogger()->notice('The old configuration file can be found at config.old.yml');
 
