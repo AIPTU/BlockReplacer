@@ -2,8 +2,8 @@
 # Do not change this (Only for internal use)!
 config-version: 3
 
-# The block will not be replaced if this is ignored.
-ignore-cancelled: true
+# Whether to check for plugin updates
+check-update: true
 
 # The total amount of time in seconds that the block will be replaced with the previous block.
 cooldown: 60 

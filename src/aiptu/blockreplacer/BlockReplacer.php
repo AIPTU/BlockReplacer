@@ -10,7 +10,6 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\LegacyStringToItemParserException;
-use pocketmine\item\StringToItemParser;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\world\World;
@@ -20,7 +19,6 @@ use function explode;
 use function gettype;
 use function in_array;
 use function rename;
-use function strval;
 
 final class BlockReplacer extends PluginBase implements Listener
 {
@@ -31,25 +29,17 @@ final class BlockReplacer extends PluginBase implements Listener
 
 	public function onEnable(): void
 	{
-		if (!class_exists(UpdateNotifier::class)) {
-			$this->getLogger()->error('UpdateNotifier virion not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer for a pre-compiled phar');
-			$this->getServer()->getPluginManager()->disablePlugin($this);
-			return;
-		}
-
-		$this->loadConfig();
-
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 
-		UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
+		$this->checkConfig();
+
+		if ((bool) $this->getConfig()->get('check-update', true)) {
+			$this->checkUpdate();
+		}
 	}
 
 	public function onBlockBreak(BlockBreakEvent $event): void
 	{
-		if (((bool) $this->getConfig()->get('ignore-cancelled', true)) && $event->isCancelled()) {
-			return;
-		}
-
 		$block = $event->getBlock();
 		$player = $event->getPlayer();
 		$world = $block->getPosition()->getWorld();
@@ -58,22 +48,22 @@ final class BlockReplacer extends PluginBase implements Listener
 			return;
 		}
 
-		$defaultReplace = StringToItemParser::getInstance()->parse(strval($this->getConfig()->get('default-replace', 'minecraft:bedrock'))) ?? LegacyStringToItemParser::getInstance()->parse(strval($this->getConfig()->get('default-replace', 'minecraft:bedrock')));
+		if (!isset($this->getConfig()->getAll()['blocks']['list'])) {
+			return;
+		}
+
+		$defaultReplace = LegacyStringToItemParser::getInstance()->parse($this->getConfig()->getNested('blocks.default-replace', 'minecraft:bedrock'));
 		$blockReplace = null;
 		$customReplace = null;
 
-		foreach ((array) $this->getConfig()->getNested('blocks.list', []) as $value) {
-			$explode = explode('=', strval($value));
+		foreach ($this->getConfig()->getAll()['blocks']['list'] as $value) {
+			$explode = explode('=', $value);
 
 			if (count($explode) === 1) {
-				$blockReplace = StringToItemParser::getInstance()->parse(strval($value)) ?? LegacyStringToItemParser::getInstance()->parse(strval($value));
+				$blockReplace = LegacyStringToItemParser::getInstance()->parse($value);
 			} elseif (count($explode) === 2) {
-				$blockReplace = StringToItemParser::getInstance()->parse($explode[0]) ?? LegacyStringToItemParser::getInstance()->parse($explode[0]);
-				$customReplace = StringToItemParser::getInstance()->parse($explode[1]) ?? LegacyStringToItemParser::getInstance()->parse($explode[1]);
-			}
-
-			if ($blockReplace === null) {
-				return;
+				$blockReplace = LegacyStringToItemParser::getInstance()->parse($explode[0]);
+				$customReplace = LegacyStringToItemParser::getInstance()->parse($explode[1]);
 			}
 
 			if ($block->getId() === $blockReplace->getId() && $block->getMeta() === $blockReplace->getMeta()) {
@@ -81,7 +71,7 @@ final class BlockReplacer extends PluginBase implements Listener
 					return;
 				}
 
-				if (!$player->hasPermission('defaultReplacer.bypass')) {
+				if (!$player->hasPermission('blockreplacer.bypass')) {
 					return;
 				}
 
@@ -116,7 +106,7 @@ final class BlockReplacer extends PluginBase implements Listener
 		}
 	}
 
-	private function loadConfig(): void
+	private function checkConfig(): void
 	{
 		$this->saveDefaultConfig();
 
@@ -130,6 +120,7 @@ final class BlockReplacer extends PluginBase implements Listener
 		}
 
 		foreach ([
+			'check-update' => 'boolean',
 			'cooldown' => 'integer',
 			'auto-pickup' => 'boolean',
 			'blocks.list' => 'array',
@@ -141,40 +132,55 @@ final class BlockReplacer extends PluginBase implements Listener
 			}
 		}
 
-		match ($this->getConfig()->getNested('worlds.mode', 'blacklist')) {
+		match ($this->getConfig()->getNested('worlds.mode')) {
 			'blacklist' => $this->mode = self::MODE_BLACKLIST,
 			'whitelist' => $this->mode = self::MODE_WHITELIST,
 			default => throw new \InvalidArgumentException('Invalid mode selected, must be either "blacklist" or "whitelist"!'),
 		};
 
-		foreach ((array) $this->getConfig()->getNested('blocks.list', []) as $value) {
-			$explode = explode('=', strval($value));
+		try {
+			$defaultReplace = LegacyStringToItemParser::getInstance()->parse($this->getConfig()->getNested('blocks.default-replace', 'minecraft:bedrock'));
+		} catch (LegacyStringToItemParserException $e) {
+			throw $e;
+		}
+
+		if (!isset($this->getConfig()->getAll()['blocks']['list'])) {
+			return;
+		}
+
+		foreach ($this->getConfig()->getAll()['blocks']['list'] as $value) {
+			$explode = explode('=', $value);
 
 			try {
 				if (count($explode) === 1) {
-					$blockReplace = StringToItemParser::getInstance()->parse(strval($value)) ?? LegacyStringToItemParser::getInstance()->parse(strval($value));
+					$blockReplace = LegacyStringToItemParser::getInstance()->parse($value);
 				} elseif (count($explode) === 2) {
-					$blockReplace = StringToItemParser::getInstance()->parse($explode[0]) ?? LegacyStringToItemParser::getInstance()->parse($explode[0]);
-					$customReplace = StringToItemParser::getInstance()->parse($explode[1]) ?? LegacyStringToItemParser::getInstance()->parse($explode[1]);
+					$blockReplace = LegacyStringToItemParser::getInstance()->parse($explode[0]);
+					$customReplace = LegacyStringToItemParser::getInstance()->parse($explode[1]);
 				}
 			} catch (LegacyStringToItemParserException $e) {
 				throw $e;
 			}
 		}
+	}
 
-		try {
-			$defaultReplace = StringToItemParser::getInstance()->parse(strval($this->getConfig()->get('default-replace', 'minecraft:bedrock'))) ?? LegacyStringToItemParser::getInstance()->parse(strval($this->getConfig()->get('default-replace', 'minecraft:bedrock')));
-		} catch (\InvalidArgumentException $e) {
-			throw $e;
+	private function checkUpdate(): void
+	{
+		if (!class_exists(UpdateNotifier::class)) {
+			$this->getLogger()->error('UpdateNotifier virion not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer for a pre-compiled phar');
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+			return;
 		}
+
+		UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
 	}
 
 	private function checkWorlds(World $world): bool
 	{
 		if ($this->mode === self::MODE_BLACKLIST) {
-			return !(in_array($world->getFolderName(), (array) $this->getConfig()->getNested('worlds.list', []), true));
+			return !(in_array($world->getFolderName(), $this->getConfig()->getAll()['worlds']['list'], true));
 		}
 
-		return in_array($world->getFolderName(), (array) $this->getConfig()->getNested('worlds.list', []), true);
+		return in_array($world->getFolderName(), $this->getConfig()->getAll()['worlds']['list'], true);
 	}
 }
