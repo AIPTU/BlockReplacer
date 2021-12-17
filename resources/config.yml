@@ -12,6 +12,16 @@ cooldown: 60
 # If the player's inventory is full, the item will automatically be dropped near the player.
 auto-pickup: true
 
+# This permission allows the player to replace blocks.
+permission:
+  # Permission name.
+  name: "blockreplacer.bypass"
+  # Permission description.
+  description: "Allows users to bypass block replacement."
+  # op: all server operators (ops) are granted this permission by default.
+  # all: everyone is granted this permission by default.
+  defaults: "op"
+
 blocks:
   # Default block to be used as a replacement.
   # If the block has meta or damage, you can use the format "minecraft:id:meta/damage".
