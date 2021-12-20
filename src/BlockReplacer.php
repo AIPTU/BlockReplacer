@@ -52,10 +52,10 @@ final class BlockReplacer extends PluginBase
 	public function checkWorlds(World $world): bool
 	{
 		if ($this->mode === self::MODE_BLACKLIST) {
-			return !(in_array($world->getFolderName(), $this->getConfigProperty()->getProperty('worlds.list', []), true));
+			return !(in_array($world->getFolderName(), $this->getConfigProperty()->getPropertyArray('worlds.list', []), true));
 		}
 
-		return in_array($world->getFolderName(), $this->getConfigProperty()->getProperty('worlds.list', []), true);
+		return in_array($world->getFolderName(), $this->getConfigProperty()->getPropertyArray('worlds.list', []), true);
 	}
 
 	public function checkPermission(): string
@@ -89,21 +89,6 @@ final class BlockReplacer extends PluginBase
 
 		ConfigUpdater::checkUpdate($this, $this->getConfig(), 'config-version', self::CONFIG_VERSION);
 
-		foreach ([
-			'check-update' => 'boolean',
-			'cooldown' => 'integer',
-			'auto-pickup' => 'boolean',
-			'permission.name' => 'string',
-			'permission.description' => 'string',
-			'blocks.list' => 'array',
-			'blocks.default-replace' => 'string',
-			'worlds.list' => 'array',
-		] as $option => $expectedType) {
-			if (($type = gettype($this->getConfig()->getNested($option))) !== $expectedType) {
-				throw new \TypeError("Config error: Option ({$option}) must be of type {$expectedType}, {$type} was given");
-			}
-		}
-
 		$this->checkPermission();
 		$this->parseItems();
 		$this->parseWorlds();
@@ -117,7 +102,7 @@ final class BlockReplacer extends PluginBase
 			throw $e;
 		}
 
-		foreach ($this->getConfigProperty()->getProperty('blocks.list', []) as $value) {
+		foreach ($this->getConfigProperty()->getPropertyArray('blocks.list', []) as $value) {
 			$explode = explode('=', $value);
 
 			try {

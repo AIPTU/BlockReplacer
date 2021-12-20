@@ -7,6 +7,11 @@ namespace aiptu\blockreplacer\utils;
 use pocketmine\utils\Config;
 use function array_key_exists;
 use function getopt;
+use function is_array;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
 
 final class ConfigProperty
 {
@@ -25,7 +30,7 @@ final class ConfigProperty
 		return $this->config;
 	}
 
-	public function getProperty(string $variable, mixed $defaultValue = null): mixed
+	public function getProperty(string $variable, mixed $defaultValue): mixed
 	{
 		if (!array_key_exists($variable, $this->propertyCache)) {
 			$v = getopt('', ["{$variable}::"]);
@@ -39,19 +44,66 @@ final class ConfigProperty
 		return $this->propertyCache[$variable] ?? $defaultValue;
 	}
 
+	public function setProperty(string $variable, mixed $defaultValue): void
+	{
+		$this->getConfig()->setNested($variable, $defaultValue);
+		$this->save();
+		$this->propertyCache[$variable] = $this->getConfig()->getNested($variable);
+	}
+
 	public function getPropertyBool(string $variable, bool $defaultValue): bool
 	{
-		return (bool) $this->getProperty($variable, $defaultValue);
+		$value = $this->getProperty($variable, $defaultValue);
+		if (!is_bool($value)) {
+			$this->setProperty($variable, $defaultValue);
+			return $defaultValue;
+		}
+
+		return $value;
 	}
 
 	public function getPropertyInt(string $variable, int $defaultValue): int
 	{
-		return (int) $this->getProperty($variable, $defaultValue);
+		$value = $this->getProperty($variable, $defaultValue);
+		if (!is_int($value)) {
+			$this->setProperty($variable, $defaultValue);
+			return $defaultValue;
+		}
+
+		return $value;
+	}
+
+	public function getPropertyFloat(string $variable, float $defaultValue): float
+	{
+		$value = $this->getProperty($variable, $defaultValue);
+		if (!is_float($value)) {
+			$this->setProperty($variable, $defaultValue);
+			return $defaultValue;
+		}
+
+		return $value;
 	}
 
 	public function getPropertyString(string $variable, string $defaultValue): string
 	{
-		return (string) $this->getProperty($variable, $defaultValue);
+		$value = $this->getProperty($variable, $defaultValue);
+		if (!is_string($value)) {
+			$this->setProperty($variable, $defaultValue);
+			return $defaultValue;
+		}
+
+		return $value;
+	}
+
+	public function getPropertyArray(string $variable, array $defaultValue): array
+	{
+		$value = $this->getProperty($variable, $defaultValue);
+		if (!is_array($value)) {
+			$this->setProperty($variable, $defaultValue);
+			return $defaultValue;
+		}
+
+		return $value;
 	}
 
 	public function save(): void

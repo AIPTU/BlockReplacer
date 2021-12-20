@@ -36,7 +36,7 @@ final class EventHandler implements Listener
 		$fromBlock = null;
 		$toBlock = null;
 
-		foreach ($this->getPlugin()->getConfigProperty()->getProperty('blocks.list', []) as $value) {
+		foreach ($this->getPlugin()->getConfigProperty()->getPropertyArray('blocks.list', []) as $value) {
 			$explode = explode('=', $value);
 
 			if (count($explode) === 1) {
