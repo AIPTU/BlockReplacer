@@ -64,9 +64,7 @@ final class BlockReplacer extends PluginBase
 
 		$this->checkConfig();
 
-		if (class_exists(UpdateNotifier::class)) {
-			UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
-		}
+		$this->checkUpdate();
 	}
 
 	public function getConfigProperty(): ConfigProperty
@@ -156,4 +154,17 @@ final class BlockReplacer extends PluginBase
 
 		$this->checkPermission();
 	}
+
+	private function checkUpdate(): void
+	{
+		if (!class_exists(UpdateNotifier::class)) {
+			$this->getLogger()->error('UpdateNotifier virion not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer for a pre-compiled phar');
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+			return;
+		}
+
+		if ($this->getConfigProperty()->getPropertyBool('check-updates', true)) {
+			UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
+		}
+ 	}
 }

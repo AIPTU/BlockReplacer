@@ -2,6 +2,9 @@
 # Do not change this (Only for internal use)!
 config-version: 1.3
 
+# Whether to check for plugin updates (Recommended)
+check-updates: true
+
 # The total amount of time in a matter of seconds that the block will be replaced with the previous block.
 cooldown: 60 
 
