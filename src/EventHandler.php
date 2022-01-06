@@ -1,12 +1,35 @@
 <?php
 
+/*
+ *
+ * Copyright (c) 2021 AIPTU
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 declare(strict_types=1);
 
 namespace aiptu\blockreplacer;
 
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
-use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\scheduler\ClosureTask;
 use function count;
 use function explode;
@@ -32,7 +55,7 @@ final class EventHandler implements Listener
 			return;
 		}
 
-		$defaultBlock = LegacyStringToItemParser::getInstance()->parse($this->getPlugin()->getConfigProperty()->getPropertyString('blocks.default-replace', 'minecraft:bedrock'));
+		$defaultBlock = $this->getPlugin()->checkItem($this->getPlugin()->getConfigProperty()->getPropertyString('blocks.default-replace', 'minecraft:bedrock'));
 		$fromBlock = null;
 		$toBlock = null;
 
@@ -40,18 +63,18 @@ final class EventHandler implements Listener
 			$explode = explode('=', $value);
 
 			if (count($explode) === 1) {
-				$fromBlock = LegacyStringToItemParser::getInstance()->parse($value);
+				$fromBlock = $this->getPlugin()->checkItem($value);
 			} elseif (count($explode) === 2) {
-				$fromBlock = LegacyStringToItemParser::getInstance()->parse($explode[0]);
-				$toBlock = LegacyStringToItemParser::getInstance()->parse($explode[1]);
+				$fromBlock = $this->getPlugin()->checkItem($explode[0]);
+				$toBlock = $this->getPlugin()->checkItem($explode[1]);
 			}
 
 			if ($fromBlock === null) {
 				continue;
 			}
 
-			if ($block->getId() === $fromBlock->getId() && $block->getMeta() === $fromBlock->getMeta()) {
-				if (!$player->hasPermission($this->getPlugin()->checkPermission()) && !$this->getPlugin()->checkWorlds($world)) {
+			if ($block->asItem()->equals($fromBlock)) {
+				if (!$player->hasPermission($this->getPlugin()->checkPermission()) && !$this->getPlugin()->checkWorld($world)) {
 					return;
 				}
 

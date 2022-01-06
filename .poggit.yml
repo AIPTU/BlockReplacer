@@ -6,4 +6,8 @@ projects:
   BlockReplacer:
     path: ""
     icon: "icon.png"
+    libs:
+    - src: ifera-mc/UpdateNotifier/UpdateNotifier
+      version: ^2.2.0
+      branch: API-4.0.0
 ...
