@@ -39,6 +39,7 @@ use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
 use pocketmine\world\World;
 use function array_keys;
+use function class_exists;
 use function count;
 use function explode;
 use function implode;
@@ -166,5 +167,5 @@ final class BlockReplacer extends PluginBase
 		if ($this->getConfigProperty()->getPropertyBool('check-updates', true)) {
 			UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
 		}
- 	}
+	}
 }
