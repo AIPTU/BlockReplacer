@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer;
 
-//use JackMD\UpdateNotifier\UpdateNotifier;
+use JackMD\UpdateNotifier\UpdateNotifier;
 use pocketmine\item\Item;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\LegacyStringToItemParserException;
@@ -60,7 +60,7 @@ final class BlockReplacer extends PluginBase
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventHandler($this), $this);
 
-		//$this->checkUpdate();
+		$this->checkUpdate();
 	}
 
 	public function getTypedConfig(): TypedConfig
@@ -124,7 +124,7 @@ final class BlockReplacer extends PluginBase
 		};
 	}
 
-	/*private function checkUpdate(): void
+	private function checkUpdate(): void
 	{
 		if (!class_exists(UpdateNotifier::class)) {
 			$this->getLogger()->error('UpdateNotifier virion not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer for a pre-compiled phar');
@@ -135,5 +135,5 @@ final class BlockReplacer extends PluginBase
 		if ($this->getTypedConfig()->getBool('check-updates')) {
 			UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
 		}
-	}*/
+	}
 }
