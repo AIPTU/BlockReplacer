@@ -1,8 +1,8 @@
 # BlockReplacer
 
-[![Discord](https://img.shields.io/discord/830063409000087612?color=7389D8&label=discord)](https://discord.com/invite/EggNF9hvGv)
-[![Poggit State](https://poggit.pmmp.io/shield.state/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
-[![Poggit Download Total](https://poggit.pmmp.io/shield.dl.total/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
+[![](https://img.shields.io/discord/830063409000087612?color=7389D8&label=discord)](https://discord.com/invite/EggNF9hvGv)
+[![](https://poggit.pmmp.io/shield.state/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
+[![](https://poggit.pmmp.io/shield.dl.total/BlockReplacer)](https://poggit.pmmp.io/p/BlockReplacer)
 
 A PocketMine-MP plugin which replaces block to another block at predefined time.
 
@@ -26,22 +26,15 @@ A PocketMine-MP plugin which replaces block to another block at predefined time.
 # Do not change this (Only for internal use)!
 config-version: 1.3
 
+# Whether to check for plugin updates (Recommended)
+check-updates: true
+
 # The total amount of time in a matter of seconds that the block will be replaced with the previous block.
 cooldown: 60 
 
 # Dropped items will be automatically added to the player's inventory.
 # If the player inventory is full, the item will automatically be dropped near the player.
 auto-pickup: true
-
-# # This permission allows the player to change blocks.
-permission:
-  # Permission name.
-  name: "blockreplacer.bypass"
-  # Permission description.
-  description: "Allows the user to bypass block replacement."
-  # op: all server operators (ops) are granted this permission by default.
-  # all: everyone is granted this permission by default.
-  defaults: "op"
 
 blocks:
   # Default block to use as a replacement.
@@ -80,5 +73,5 @@ worlds:
 # Additional Notes
 
 - If you find bugs or want to give suggestions, please visit [here](https://github.com/AIPTU/BlockReplacer/issues).
-- We accept any contributions! If you want to contribute please make a pull request in [here](https://github.com/AIPTU/BlockReplacer/pulls).
+- We accept all contributions! If you want to contribute, please make a pull request in [here](https://github.com/AIPTU/BlockReplacer/pulls).
 - Icons made from [www.flaticon.com](https://www.flaticon.com)
