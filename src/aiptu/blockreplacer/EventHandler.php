@@ -55,11 +55,11 @@ final class EventHandler implements Listener
 			return;
 		}
 
-		$defaultBlock = $this->getPlugin()->checkItem($this->getPlugin()->getConfigProperty()->getPropertyString('blocks.default-replace', 'minecraft:bedrock'));
+		$defaultBlock = $this->getPlugin()->checkItem($this->getPlugin()->getTypedConfig()->getString('blocks.default-replace', 'minecraft:bedrock'));
 		$fromBlock = null;
 		$toBlock = null;
 
-		foreach ($this->getPlugin()->getConfigProperty()->getPropertyArray('blocks.list', []) as $value) {
+		foreach ($this->getPlugin()->getTypedConfig()->getStringList('blocks.list') as $value) {
 			$explode = explode('=', $value);
 
 			if (count($explode) === 1) {
@@ -74,12 +74,16 @@ final class EventHandler implements Listener
 			}
 
 			if ($block->asItem()->equals($fromBlock)) {
-				if (!$player->hasPermission($this->getPlugin()->checkPermission()) && !$this->getPlugin()->checkWorld($world)) {
+				if ($player->hasPermission('blockreplacer.bypass')) {
+					return;
+				}
+
+				if (!$this->getPlugin()->checkWorld($player->getWorld())) {
 					return;
 				}
 
 				foreach ($event->getDrops() as $drops) {
-					if ($this->getPlugin()->getConfigProperty()->getPropertyBool('auto-pickup', true)) {
+					if ($this->getPlugin()->getTypedConfig()->getBool('auto-pickup')) {
 						(!$player->getInventory()->canAddItem($drops)) ? ($world->dropItem($block->getPosition(), $drops)) : ($player->getInventory()->addItem($drops));
 						(!$player->getXpManager()->canPickupXp()) ? ($world->dropExperience($block->getPosition(), $event->getXpDropAmount())) : ($player->getXpManager()->addXp($event->getXpDropAmount()));
 
@@ -102,7 +106,7 @@ final class EventHandler implements Listener
 
 				$this->getPlugin()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($block, $world): void {
 					$world->setBlock($block->getPosition(), $block);
-				}), 20 * $this->getPlugin()->getConfigProperty()->getPropertyInt('cooldown', 60));
+				}), 20 * $this->getPlugin()->getTypedConfig()->getInt('cooldown', 60));
 			}
 		}
 	}

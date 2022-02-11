@@ -4,4 +4,8 @@ main: aiptu\blockreplacer\BlockReplacer
 version: 1.3.0
 api: [4.0.0]
 author: AIPTU
+permissions:
+  blockreplacer.bypass:
+    default: op
+    description: Allows users to bypass block replacement.
 ...
