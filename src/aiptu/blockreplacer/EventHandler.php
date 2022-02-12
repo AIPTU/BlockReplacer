@@ -74,11 +74,7 @@ final class EventHandler implements Listener
 			}
 
 			if ($block->asItem()->equals($fromBlock)) {
-				if (!$player->hasPermission('blockreplacer.bypass')) {
-					return;
-				}
-
-				if (!$this->getPlugin()->checkWorld($player->getWorld())) {
+				if (!$player->hasPermission('blockreplacer.bypass') && !$this->getPlugin()->checkWorld($player->getWorld())) {
 					return;
 				}
 
