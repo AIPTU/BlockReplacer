@@ -45,7 +45,7 @@ use function trim;
 
 final class BlockReplacer extends PluginBase
 {
-	private const CONFIG_VERSION = 1.3;
+	private const CONFIG_VERSION = 1.4;
 
 	private const MODE_BLACKLIST = 0;
 	private const MODE_WHITELIST = 1;
