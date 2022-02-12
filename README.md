@@ -23,7 +23,7 @@ A PocketMine-MP plugin which replaces block to another block at predefined time.
 ```yaml
 ---
 # Do not change this (Only for internal use)!
-config-version: 1.3
+config-version: 1.4
 
 # Whether to check for plugin updates (Recommended)
 check-updates: true
