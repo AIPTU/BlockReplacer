@@ -31,8 +31,6 @@ namespace aiptu\blockreplacer;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\scheduler\ClosureTask;
-use function count;
-use function explode;
 
 final class EventHandler implements Listener
 {
@@ -45,54 +43,35 @@ final class EventHandler implements Listener
 		return $this->plugin;
 	}
 
+	/**
+	 * @handleCancelled true
+	 * @priority HIGH
+	 */
 	public function onBlockBreak(BlockBreakEvent $event): void
 	{
 		$block = $event->getBlock();
 		$player = $event->getPlayer();
 		$world = $block->getPosition()->getWorld();
+		$defaultBlock = ConfigManager::getDefaultReplace();
 
-		if (!$block->getBreakInfo()->isToolCompatible($event->getItem())) {
-			return;
-		}
+		foreach (ConfigManager::getListBlocks() as $data) {
+			[$fromBlock, $toBlock] = $data;
 
-		$defaultBlock = $this->getPlugin()->checkItem($this->getPlugin()->getTypedConfig()->getString('blocks.default-replace', 'minecraft:bedrock'));
-		$fromBlock = null;
-		$toBlock = null;
-
-		foreach ($this->getPlugin()->getTypedConfig()->getStringList('blocks.list') as $value) {
-			$explode = explode('=', $value);
-
-			if (count($explode) === 1) {
-				$fromBlock = $this->getPlugin()->checkItem($value);
-			} elseif (count($explode) === 2) {
-				$fromBlock = $this->getPlugin()->checkItem($explode[0]);
-				$toBlock = $this->getPlugin()->checkItem($explode[1]);
-			}
-
-			if ($fromBlock === null) {
-				continue;
-			}
-
-			if ($block->asItem()->equals($fromBlock)) {
+			if ($block->asItem()->equals($fromBlock, true, false)) {
 				if (!$player->hasPermission('blockreplacer.bypass') && !$this->getPlugin()->checkWorld($player->getWorld())) {
 					return;
 				}
 
-				foreach ($event->getDrops() as $drops) {
-					if ($this->getPlugin()->getTypedConfig()->getBool('auto-pickup')) {
-						(!$player->getInventory()->canAddItem($drops)) ? ($world->dropItem($block->getPosition(), $drops)) : ($player->getInventory()->addItem($drops));
-						(!$player->getXpManager()->canPickupXp()) ? ($world->dropExperience($block->getPosition(), $event->getXpDropAmount())) : ($player->getXpManager()->addXp($event->getXpDropAmount()));
-
-						continue;
+				foreach ($player->getInventory()->addItem(...$event->getDrops()) as $drops) {
+					if (!ConfigManager::isAutoPickupEnable()) {
+						break;
 					}
 
 					$world->dropItem($block->getPosition(), $drops);
-					$world->dropExperience($block->getPosition(), $event->getXpDropAmount());
 				}
+				$player->getXpManager()->addXp($event->getXpDropAmount());
 
 				$event->cancel();
-
-				$world->setBlock($block->getPosition(), $defaultBlock->getBlock());
 
 				if ($toBlock === null) {
 					$world->setBlock($block->getPosition(), $defaultBlock->getBlock());
@@ -102,7 +81,7 @@ final class EventHandler implements Listener
 
 				$this->getPlugin()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($block, $world): void {
 					$world->setBlock($block->getPosition(), $block);
-				}), 20 * $this->getPlugin()->getTypedConfig()->getInt('cooldown', 60));
+				}), ConfigManager::getCooldown());
 			}
 		}
 	}

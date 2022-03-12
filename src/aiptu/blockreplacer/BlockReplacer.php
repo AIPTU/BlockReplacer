@@ -36,36 +36,25 @@ use pocketmine\item\StringToItemParser;
 use pocketmine\plugin\PluginBase;
 use pocketmine\world\World;
 use function class_exists;
-use function count;
 use function explode;
 use function in_array;
-use function rename;
 use function str_replace;
 use function trim;
 
 final class BlockReplacer extends PluginBase
 {
-	private const CONFIG_VERSION = 1.4;
-
-	private const MODE_BLACKLIST = 0;
-	private const MODE_WHITELIST = 1;
-
-	private int $mode;
-
-	private TypedConfig $typedConfig;
-
 	public function onEnable(): void
 	{
-		$this->checkConfig();
+		ConfigManager::init($this);
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventHandler($this), $this);
 
-		$this->checkUpdate();
-	}
-
-	public function getTypedConfig(): TypedConfig
-	{
-		return $this->typedConfig;
+		if (!class_exists(UpdateNotifier::class)) {
+			$this->getLogger()->error('UpdateNotifier virion not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer');
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+			return;
+		}
+		UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
 	}
 
 	public function checkItem(string $string): Item
@@ -83,57 +72,24 @@ final class BlockReplacer extends PluginBase
 
 	public function checkWorld(World $world): bool
 	{
-		if ($this->mode === self::MODE_BLACKLIST) {
-			return !(in_array($world->getFolderName(), $this->getTypedConfig()->getStringList('worlds.list'), true));
+		$blacklist = ConfigManager::isWorldBlacklistEnable();
+		$whitelist = ConfigManager::isWorldWhitelistEnable();
+		$worldName = $world->getFolderName();
+
+		if ($blacklist === $whitelist) {
+			return true;
 		}
 
-		return in_array($world->getFolderName(), $this->getTypedConfig()->getStringList('worlds.list'), true);
-	}
-
-	private function checkConfig(): void
-	{
-		$this->saveDefaultConfig();
-
-		if (!$this->getConfig()->exists('config-version') || ($this->getConfig()->get('config-version', self::CONFIG_VERSION) !== self::CONFIG_VERSION)) {
-			$this->getLogger()->warning('An outdated config was provided attempting to generate a new one...');
-			if (!rename($this->getDataFolder() . 'config.yml', $this->getDataFolder() . 'config.old.yml')) {
-				$this->getLogger()->critical('An unknown error occurred while attempting to generate the new config');
-				$this->getServer()->getPluginManager()->disablePlugin($this);
-			}
-			$this->reloadConfig();
+		if ($blacklist) {
+			$disallowedWorlds = ConfigManager::getBlacklistedWorlds();
+			return !(in_array($worldName, $disallowedWorlds, true));
 		}
 
-		$this->typedConfig = new TypedConfig($this->getConfig());
-
-		$this->checkItem($this->getTypedConfig()->getString('blocks.default-replace', 'minecraft:bedrock'));
-		foreach ($this->getTypedConfig()->getStringList('blocks.list') as $value) {
-			$explode = explode('=', $value);
-
-			if (count($explode) === 1) {
-				$fromBlock = $this->checkItem($value);
-			} elseif (count($explode) === 2) {
-				$fromBlock = $this->checkItem($explode[0]);
-				$toBlock = $this->checkItem($explode[1]);
-			}
+		if ($whitelist) {
+			$allowedWorlds = ConfigManager::getWhitelistedWorlds();
+			return in_array($worldName, $allowedWorlds, true);
 		}
 
-		match ($this->getTypedConfig()->getString('worlds.mode', 'blacklist')) {
-			'blacklist' => $this->mode = self::MODE_BLACKLIST,
-			'whitelist' => $this->mode = self::MODE_WHITELIST,
-			default => throw new \InvalidArgumentException('Invalid mode selected, must be either "blacklist" or "whitelist"!'),
-		};
-	}
-
-	private function checkUpdate(): void
-	{
-		if (!class_exists(UpdateNotifier::class)) {
-			$this->getLogger()->error('UpdateNotifier virion not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer for a pre-compiled phar');
-			$this->getServer()->getPluginManager()->disablePlugin($this);
-			return;
-		}
-
-		if ($this->getTypedConfig()->getBool('check-updates')) {
-			UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
-		}
+		return false;
 	}
 }
