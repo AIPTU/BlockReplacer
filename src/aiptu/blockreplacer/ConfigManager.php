@@ -44,7 +44,7 @@ use function var_export;
 
 final class ConfigManager
 {
-	private const CONFIG_VERSION = 1.4;
+	private const CONFIG_VERSION = 1.5;
 
 	private static Config $config;
 
