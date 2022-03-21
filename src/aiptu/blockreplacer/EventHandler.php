@@ -58,30 +58,32 @@ final class EventHandler implements Listener
 			[$fromBlock, $toBlock] = $data;
 
 			if ($block->asItem()->equals($fromBlock, true, false)) {
-				if (!$player->hasPermission('blockreplacer.bypass') && !$this->getPlugin()->checkWorld($player->getWorld())) {
-					return;
-				}
-
-				foreach ($player->getInventory()->addItem(...$event->getDrops()) as $drops) {
-					if (!ConfigManager::isAutoPickupEnable()) {
-						break;
+				if ($player->hasPermission('blockreplacer.bypass')) {
+					if (!$this->getPlugin()->checkWorld($player->getWorld())) {
+						return;
 					}
 
-					$world->dropItem($block->getPosition(), $drops);
+					foreach ($player->getInventory()->addItem(...$event->getDrops()) as $drops) {
+						if (!ConfigManager::isAutoPickupEnable()) {
+							break;
+						}
+
+						$world->dropItem($block->getPosition(), $drops);
+					}
+					$player->getXpManager()->addXp($event->getXpDropAmount());
+
+					$event->cancel();
+
+					if ($toBlock === null) {
+						$world->setBlock($block->getPosition(), $defaultBlock->getBlock());
+					} else {
+						$world->setBlock($block->getPosition(), $toBlock->getBlock());
+					}
+
+					$this->getPlugin()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($block, $world): void {
+						$world->setBlock($block->getPosition(), $block);
+					}), ConfigManager::getCooldown());
 				}
-				$player->getXpManager()->addXp($event->getXpDropAmount());
-
-				$event->cancel();
-
-				if ($toBlock === null) {
-					$world->setBlock($block->getPosition(), $defaultBlock->getBlock());
-				} else {
-					$world->setBlock($block->getPosition(), $toBlock->getBlock());
-				}
-
-				$this->getPlugin()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($block, $world): void {
-					$world->setBlock($block->getPosition(), $block);
-				}), ConfigManager::getCooldown());
 			}
 		}
 	}
