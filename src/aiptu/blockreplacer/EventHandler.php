@@ -63,14 +63,17 @@ final class EventHandler implements Listener
 						return;
 					}
 
-					foreach ($player->getInventory()->addItem(...$event->getDrops()) as $drops) {
-						if (!ConfigManager::isAutoPickupEnable()) {
-							break;
+					foreach ($event->getDrops() as $drops) {
+						if (ConfigManager::isAutoPickupEnable()) {
+							(!$player->getInventory()->canAddItem($drops)) ? ($world->dropItem($block->getPosition()->add(0.5, 0.5, 0.5), $drops)) : ($player->getInventory()->addItem($drops));
+							(!$player->getXpManager()->canPickupXp()) ? ($world->dropExperience($block->getPosition()->add(0.5, 0.5, 0.5), $event->getXpDropAmount())) : ($player->getXpManager()->addXp($event->getXpDropAmount()));
+
+							continue;
 						}
 
-						$world->dropItem($block->getPosition(), $drops);
+						$world->dropItem($block->getPosition()->add(0.5, 0.5, 0.5), $drops);
+						$world->dropExperience($block->getPosition()->add(0.5, 0.5, 0.5), $event->getXpDropAmount());
 					}
-					$player->getXpManager()->addXp($event->getXpDropAmount());
 
 					$event->cancel();
 
