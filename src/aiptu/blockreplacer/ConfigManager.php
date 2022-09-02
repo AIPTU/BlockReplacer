@@ -1,173 +1,273 @@
 <?php
 
 /*
+ * Copyright (c) 2021-2022 AIPTU
  *
- * Copyright (c) 2021 AIPTU
+ * For the full copyright and license information, please view
+ * the LICENSE.md file that was distributed with this source code.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
+ * @see https://github.com/AIPTU/BlockReplacer
  */
 
 declare(strict_types=1);
 
 namespace aiptu\blockreplacer;
 
-use InvalidArgumentException;
+use DiamondStrider1\Sounds\SoundFactory;
+use DiamondStrider1\Sounds\SoundImpl;
 use pocketmine\item\Item;
 use pocketmine\utils\Config;
-use function array_filter;
+use pocketmine\utils\SingletonTrait;
 use function array_map;
 use function count;
 use function explode;
+use function gettype;
 use function is_array;
 use function is_bool;
+use function is_float;
 use function is_int;
 use function is_string;
 use function rename;
-use function var_export;
+use function trim;
 
 final class ConfigManager
 {
-	private const CONFIG_VERSION = 1.7;
+	use SingletonTrait;
 
-	private static Config $config;
+	private const CONFIG_VERSION = 1.8;
 
-	private static int $cooldown;
-	private static bool $autoPickup;
-	private static Item $defaultReplace;
-	private static array $listBlocks;
-	private static bool $enableWorldBlacklist;
-	private static array $blacklistedWorlds;
-	private static bool $enableWorldWhitelist;
-	private static array $whitelistedWorlds;
+	private Config $config;
 
-	public static function init(BlockReplacer $plugin): void
+	private int $cooldown;
+	private bool $autoPickup;
+	private Item $defaultReplace;
+	/** @var array<array{Item, Item|null}> */
+	private array $listBlocks;
+	private ?string $particleFrom;
+	private ?string $particleTo;
+	private ?SoundImpl $soundFrom;
+	private ?SoundImpl $soundTo;
+	private bool $enableWorldBlacklist;
+	/** @var array<string> */
+	private array $blacklistedWorlds;
+	private bool $enableWorldWhitelist;
+	/** @var array<string> */
+	private array $whitelistedWorlds;
+
+	public function __construct()
 	{
-		$plugin->saveDefaultConfig();
+		$this->initConfiguration();
+	}
 
-		if (!$plugin->getConfig()->exists('config-version') || ($plugin->getConfig()->get('config-version', self::CONFIG_VERSION) !== self::CONFIG_VERSION)) {
-			$plugin->getLogger()->warning('An outdated config was provided attempting to generate a new one...');
-			if (!rename($plugin->getDataFolder() . 'config.yml', $plugin->getDataFolder() . 'config.old.yml')) {
-				$plugin->getLogger()->critical('An unknown error occurred while attempting to generate the new config');
-				$plugin->getServer()->getPluginManager()->disablePlugin($plugin);
+	public function initConfiguration(): void
+	{
+		BlockReplacer::getInstance()->saveDefaultConfig();
+		$config = BlockReplacer::getInstance()->getConfig();
+		if (!$config->exists('config-version') || ($config->get('config-version', self::CONFIG_VERSION) !== self::CONFIG_VERSION)) {
+			BlockReplacer::getInstance()->getLogger()->warning('An outdated config was provided attempting to generate a new one...');
+			if (!rename(BlockReplacer::getInstance()->getDataFolder() . 'config.yml', BlockReplacer::getInstance()->getDataFolder() . 'config.old.yml')) {
+				BlockReplacer::getInstance()->getLogger()->critical('An unknown error occurred while attempting to generate the new config');
+				BlockReplacer::getInstance()->getServer()->getPluginManager()->disablePlugin(BlockReplacer::getInstance());
 			}
-			$plugin->reloadConfig();
+			BlockReplacer::getInstance()->reloadConfig();
+
+			try {
+				$config->set('config-version', self::CONFIG_VERSION);
+				$config->save();
+			} catch (\JsonException $e) {
+				BlockReplacer::getInstance()->getLogger()->critical('An error occurred while attempting to generate the new config, ' . $e->getMessage());
+			}
 		}
+		$this->config = $config;
 
-		self::$config = $plugin->getConfig();
+		$this->cooldown = $this->expectInt('cooldown', 60);
+		$this->autoPickup = $this->expectBool('auto-pickup', true);
 
-		self::$cooldown = self::getInt('cooldown', 60);
-		self::$autoPickup = self::getBool('auto-pickup', true);
-		self::$defaultReplace = $plugin->checkItem(self::getString('default-replace', 'bedrock'));
-		self::$listBlocks = array_map(static function (string $item) use ($plugin): array {
+		$this->defaultReplace = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.default-replace', 'bedrock'));
+		$this->listBlocks = array_map(static function (string $item): array {
 			$explode = explode('=', $item);
-			return (count($explode) === 2) ? [$plugin->checkItem($explode[0]), $plugin->checkItem($explode[1])] : [$plugin->checkItem($item), null];
-		}, self::getStringList('list-blocks', []));
-		self::$enableWorldBlacklist = self::getBool('enable-world-blacklist', false);
-		self::$blacklistedWorlds = self::getStringList('blacklisted-worlds', []);
-		self::$enableWorldWhitelist = self::getBool('enable-world-whitelist', false);
-		self::$whitelistedWorlds = self::getStringList('whitelisted-worlds', []);
-	}
+			return (count($explode) === 2) ? [BlockReplacer::getInstance()->checkItem($explode[0]), BlockReplacer::getInstance()->checkItem($explode[1])] : [BlockReplacer::getInstance()->checkItem($item), null];
+		}, $this->expectStringList('blocks.list', []));
 
-	public static function isAutoPickupEnable(): bool
-	{
-		return self::$autoPickup;
-	}
-
-	public static function getCooldown(): int
-	{
-		return 20 * self::$cooldown;
-	}
-
-	public static function getDefaultReplace(): Item
-	{
-		return self::$defaultReplace;
-	}
-
-	public static function getListBlocks(): array
-	{
-		return self::$listBlocks;
-	}
-
-	public static function isWorldBlacklistEnable(): bool
-	{
-		return self::$enableWorldBlacklist;
-	}
-
-	public static function getBlacklistedWorlds(): array
-	{
-		return self::$blacklistedWorlds;
-	}
-
-	public static function isWorldWhitelistEnable(): bool
-	{
-		return self::$enableWorldWhitelist;
-	}
-
-	public static function getWhitelistedWorlds(): array
-	{
-		return self::$whitelistedWorlds;
-	}
-
-	private static function getBool(string $key, bool $default): bool
-	{
-		$value = self::$config->getNested($key, $default);
-		if (!is_bool($value)) {
-			throw new InvalidArgumentException("Invalid config value for {$key}: " . self::printValue($value) . ', expected bool');
+		$particleFrom = null;
+		$particleTo = null;
+		if ($this->expectBool('particles.enable', true)) {
+			$from = $this->expectString('particles.from', 'minecraft:villager_happy');
+			if (trim($from) !== '') {
+				$particleFrom = $from;
+			}
+			$to = $this->expectString('particles.to', 'minecraft:explosion_particle');
+			if (trim($to) !== '') {
+				$particleTo = $to;
+			}
 		}
-		return $value;
+		$this->particleFrom = $particleFrom;
+		$this->particleTo = $particleTo;
+
+		$soundFrom = null;
+		$soundTo = null;
+		if ($this->expectBool('sounds.enable', true)) {
+			$volume = $this->expectNumber('sounds.volume', 1.0);
+			$pitch = $this->expectNumber('sounds.pitch', 1.0);
+
+			$from = $this->expectString('sounds.from', 'random.orb');
+			if (trim($from) !== '') {
+				$soundFrom = SoundFactory::create($from, $volume, $pitch);
+			}
+			$to = $this->expectString('sounds.to', 'random.explode');
+			if (trim($to) !== '') {
+				$soundTo = SoundFactory::create($to, $volume, $pitch);
+			}
+		}
+		$this->soundFrom = $soundFrom;
+		$this->soundTo = $soundTo;
+
+		$this->enableWorldBlacklist = $this->expectBool('blocks.enable-world-blacklist', false);
+		$this->blacklistedWorlds = $this->expectStringList('blocks.blacklisted-worlds', []);
+		$this->enableWorldWhitelist = $this->expectBool('blocks.enable-world-whitelist', false);
+		$this->whitelistedWorlds = $this->expectStringList('blocks.whitelisted-worlds', []);
 	}
 
-	private static function getInt(string $key, int $default): int
+	public function isAutoPickupEnable(): bool
 	{
-		$value = self::$config->getNested($key, $default);
+		return $this->autoPickup;
+	}
+
+	public function getCooldown(): int
+	{
+		return 20 * $this->cooldown;
+	}
+
+	public function getDefaultReplace(): Item
+	{
+		return $this->defaultReplace;
+	}
+
+	/**
+	 * @return array<array{Item, Item|null}>
+	 */
+	public function getListBlocks(): array
+	{
+		return $this->listBlocks;
+	}
+
+	public function getParticleFrom(): ?string
+	{
+		return $this->particleFrom;
+	}
+
+	public function getParticleTo(): ?string
+	{
+		return $this->particleTo;
+	}
+
+	public function getSoundFrom(): ?SoundImpl
+	{
+		return $this->soundFrom;
+	}
+
+	public function getSoundTo(): ?SoundImpl
+	{
+		return $this->soundTo;
+	}
+
+	public function isWorldBlacklistEnable(): bool
+	{
+		return $this->enableWorldBlacklist;
+	}
+
+	/**
+	 * @return array<string>
+	 */
+	public function getBlacklistedWorlds(): array
+	{
+		return $this->blacklistedWorlds;
+	}
+
+	public function isWorldWhitelistEnable(): bool
+	{
+		return $this->enableWorldWhitelist;
+	}
+
+	/**
+	 * @return array<string>
+	 */
+	public function getWhitelistedWorlds(): array
+	{
+		return $this->whitelistedWorlds;
+	}
+
+	/**
+	 * @throws \InvalidArgumentException
+	 */
+	private function expectInt(string $key, int $default): int
+	{
+		$value = $this->config->getNested($key, $default);
+
 		if (!is_int($value)) {
-			throw new InvalidArgumentException("Invalid config value for {$key}: " . self::printValue($value) . ', expected integer');
+			throw new \InvalidArgumentException('An error occurred in the configuration with the key ' . $key . ': Expected integer, got ' . gettype($value));
 		}
-		return $value;
-	}
 
-	private static function getString(string $key, string $default): string
-	{
-		$value = self::$config->getNested($key, $default);
-		if (!is_string($value)) {
-			throw new InvalidArgumentException("Invalid config value for {$key}: " . self::printValue($value) . ', expected string');
-		}
 		return $value;
 	}
 
 	/**
-	 * @param string[] $default
-	 *
-	 * @return string[]
+	 * @throws \InvalidArgumentException
 	 */
-	private static function getStringList(string $key, array $default): array
+	private function expectNumber(string $key, float $default): float
 	{
-		$value = self::$config->getNested($key, $default);
-		if (!is_array($value) || array_filter($value, 'is_string') !== $value) {
-			throw new InvalidArgumentException("Invalid config value for {$key}: " . self::printValue($value) . ', expected string array');
+		$value = $this->config->getNested($key, $default);
+
+		if (!is_int($value) && !is_float($value)) {
+			throw new \InvalidArgumentException('An error occurred in the configuration with the key ' . $key . ': Expected number, got ' . gettype($value));
 		}
+
+		return (float) $value;
+	}
+
+	/**
+	 * @throws \InvalidArgumentException
+	 */
+	private function expectBool(string $key, bool $default): bool
+	{
+		$value = $this->config->getNested($key, $default);
+
+		if (!is_bool($value)) {
+			throw new \InvalidArgumentException('An error occurred in the configuration with the key ' . $key . ': Expected true/false, got ' . gettype($value));
+		}
+
 		return $value;
 	}
 
-	private static function printValue(mixed $value): string
+	/**
+	 * @throws \InvalidArgumentException
+	 */
+	private function expectString(string $key, string $default): string
 	{
-		return var_export($value, true);
+		$value = $this->config->getNested($key, $default);
+
+		if (!is_string($value)) {
+			throw new \InvalidArgumentException('An error occurred in the configuration with the key ' . $key . ': Expected string, got ' . gettype($value));
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @param list<string> $default
+	 *
+	 * @throws \InvalidArgumentException
+	 *
+	 * @return list<string>
+	 */
+	private function expectStringList(string $key, array $default): array
+	{
+		$value = $this->config->getNested($key, $default);
+
+		if (!is_array($value)) {
+			throw new \InvalidArgumentException('An error occurred in the configuration with the key ' . $key . ': Expected a list, got ' . gettype($value));
+		}
+
+		return $value;
 	}
 }

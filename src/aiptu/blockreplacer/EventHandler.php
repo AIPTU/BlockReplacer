@@ -1,48 +1,28 @@
 <?php
 
 /*
+ * Copyright (c) 2021-2022 AIPTU
  *
- * Copyright (c) 2021 AIPTU
+ * For the full copyright and license information, please view
+ * the LICENSE.md file that was distributed with this source code.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
+ * @see https://github.com/AIPTU/BlockReplacer
  */
 
 declare(strict_types=1);
 
 namespace aiptu\blockreplacer;
 
+use pocketmine\block\Block;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
+use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
+use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\scheduler\ClosureTask;
+use pocketmine\world\format\Chunk;
 
 final class EventHandler implements Listener
 {
-	public function __construct(private BlockReplacer $plugin)
-	{
-	}
-
-	public function getPlugin(): BlockReplacer
-	{
-		return $this->plugin;
-	}
-
 	/**
 	 * @handleCancelled true
 	 * @priority HIGH
@@ -52,19 +32,19 @@ final class EventHandler implements Listener
 		$block = $event->getBlock();
 		$player = $event->getPlayer();
 		$world = $block->getPosition()->getWorld();
-		$defaultBlock = ConfigManager::getDefaultReplace();
+		$defaultBlock = ConfigManager::getInstance()->getDefaultReplace();
 
-		foreach (ConfigManager::getListBlocks() as $data) {
+		foreach (ConfigManager::getInstance()->getListBlocks() as $data) {
 			[$fromBlock, $toBlock] = $data;
 
 			if ($block->asItem()->equals($fromBlock, true, false)) {
 				if ($player->hasPermission('blockreplacer.bypass')) {
-					if (!$this->getPlugin()->checkWorld($player->getWorld())) {
+					if (!BlockReplacer::getInstance()->checkWorld($player->getWorld())) {
 						return;
 					}
 
 					foreach ($event->getDrops() as $drops) {
-						if (ConfigManager::isAutoPickupEnable()) {
+						if (ConfigManager::getInstance()->isAutoPickupEnable()) {
 							(!$player->getInventory()->canAddItem($drops)) ? ($world->dropItem($block->getPosition()->add(0.5, 0.5, 0.5), $drops)) : ($player->getInventory()->addItem($drops));
 							(!$player->getXpManager()->canPickupXp()) ? ($world->dropExperience($block->getPosition()->add(0.5, 0.5, 0.5), $event->getXpDropAmount())) : ($player->getXpManager()->addXp($event->getXpDropAmount()));
 
@@ -77,17 +57,55 @@ final class EventHandler implements Listener
 
 					$event->cancel();
 
-					if ($toBlock === null) {
-						$world->setBlock($block->getPosition(), $defaultBlock->getBlock());
-					} else {
-						$world->setBlock($block->getPosition(), $toBlock->getBlock());
+					$particleFrom = ConfigManager::getInstance()->getParticleFrom();
+					if ($particleFrom !== null) {
+						BlockReplacer::getInstance()->getServer()->broadcastPackets($world->getPlayers(), [
+							SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $block->getPosition()->up(), $particleFrom, null),
+						]);
+					}
+					$soundFrom = ConfigManager::getInstance()->getSoundFrom();
+					if ($soundFrom !== null) {
+						$world->addSound($block->getPosition(), $soundFrom);
 					}
 
-					$this->getPlugin()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($block, $world): void {
-						$world->setBlock($block->getPosition(), $block);
-					}), ConfigManager::getCooldown());
+					if ($toBlock === null) {
+						self::setBlock($block, $defaultBlock->getBlock());
+					} else {
+						self::setBlock($block, $toBlock->getBlock());
+					}
+
+					BlockReplacer::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(static function () use ($block, $world): void {
+						self::setBlock($block, $block);
+						$particleTo = ConfigManager::getInstance()->getParticleTo();
+						if ($particleTo !== null) {
+							BlockReplacer::getInstance()->getServer()->broadcastPackets($world->getPlayers(), [
+								SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $block->getPosition()->up(), $particleTo, null),
+							]);
+						}
+						$soundTo = ConfigManager::getInstance()->getSoundTo();
+						if ($soundTo !== null) {
+							$world->addSound($block->getPosition(), $soundTo);
+						}
+					}), ConfigManager::getInstance()->getCooldown());
 				}
 			}
 		}
+	}
+
+	private static function setBlock(Block $fromBlock, Block $toBlock): void
+	{
+		$world = $fromBlock->getPosition()->getWorld();
+		$x = $fromBlock->getPosition()->getFloorX();
+		$z = $fromBlock->getPosition()->getFloorZ();
+
+		$world->orderChunkPopulation($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE, null)->onCompletion(
+			static function (Chunk $chunk) use ($fromBlock, $toBlock, $world): void {
+				$world->setBlock($fromBlock->getPosition(), $toBlock);
+				$world->getLogger()->debug('Replacing the block from "' . $fromBlock->getName() . '" to "' . $toBlock->getName() . '"');
+			},
+			static function () use ($world): void {
+				$world->getLogger()->error('An error that occurred while replacing the block');
+			},
+		);
 	}
 }
