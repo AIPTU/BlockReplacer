@@ -10,4 +10,6 @@ projects:
         version: ^3.0.0
       - src: Swift-Strider/Sounds/Sounds
         version: ^1.2.2
+    lint:
+      phpstan: false
 ...
