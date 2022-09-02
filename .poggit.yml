@@ -8,6 +8,6 @@ projects:
     libs:
       - src: ifera-mc/UpdateNotifier/UpdateNotifier
         version: ^3.0.0
-      - src: DiamondStrider1/Sounds/Sounds
+      - src: Swift-Strider/Sounds/Sounds
         version: ^1.2.2
 ...
