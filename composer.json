@@ -1,0 +1,35 @@
+{
+    "name": "aiptu/blockreplacer",
+    "description": "A PocketMine-MP plugin that replaces a block with another block at a predetermined time.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "pocketmine/pocketmine-mp": "^4.8",
+        "ifera-mc/updatenotifier": "^3",
+        "diamondstrider1/sounds": "^1.2"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan-strict-rules": "^1.4",
+        "phpstan/extension-installer": "^1.1"
+    },
+    "repositories": {
+        "updatenotifier": {
+            "type": "package",
+            "package": {
+                "name": "ifera-mc/updatenotifier",
+                "version": "3.0.0",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/ifera-mc/UpdateNotifier",
+                    "reference": "c6c1dfc5b9b5f15badc9e1dcf3b61a3600d0cbe1"
+                }
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    }
+}
