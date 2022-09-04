@@ -3,7 +3,3 @@ main: aiptu\blockreplacer\BlockReplacer
 version: 2.0.0
 api: 4.8.0
 author: AIPTU
-permissions:
-  blockreplacer.bypass:
-    default: op
-    description: Allows users to bypass block replacement

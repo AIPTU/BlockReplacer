@@ -16,12 +16,17 @@ namespace aiptu\blockreplacer;
 use DiamondStrider1\Sounds\SoundFactory;
 use DiamondStrider1\Sounds\SoundImpl;
 use pocketmine\item\Item;
+use pocketmine\permission\DefaultPermissions;
+use pocketmine\permission\Permission;
+use pocketmine\permission\PermissionManager;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
+use function array_keys;
 use function array_map;
 use function count;
 use function explode;
 use function gettype;
+use function implode;
 use function is_array;
 use function is_bool;
 use function is_float;
@@ -34,25 +39,26 @@ final class ConfigManager
 {
 	use SingletonTrait;
 
-	private const CONFIG_VERSION = 1.8;
+	private const CONFIG_VERSION = 2.0;
 
 	private Config $config;
 
+	private string $permission_defaults;
 	private int $cooldown;
-	private bool $autoPickup;
-	private Item $defaultReplace;
+	private bool $auto_pickup;
+	private Item $default_replace;
 	/** @var array<array{Item, Item|null}> */
-	private array $listBlocks;
-	private ?string $particleFrom;
-	private ?string $particleTo;
-	private ?SoundImpl $soundFrom;
-	private ?SoundImpl $soundTo;
-	private bool $enableWorldBlacklist;
+	private array $list_blocks;
+	private ?string $particle_from;
+	private ?string $particle_to;
+	private ?SoundImpl $sound_from;
+	private ?SoundImpl $sound_to;
+	private bool $enable_world_blacklist;
 	/** @var array<string> */
-	private array $blacklistedWorlds;
-	private bool $enableWorldWhitelist;
+	private array $blacklisted_worlds;
+	private bool $enable_world_whitelist;
 	/** @var array<string> */
-	private array $whitelistedWorlds;
+	private array $whitelisted_worlds;
 
 	public function __construct()
 	{
@@ -80,57 +86,80 @@ final class ConfigManager
 		}
 		$this->config = $config;
 
-		$this->cooldown = $this->expectInt('cooldown', 60);
-		$this->autoPickup = $this->expectBool('auto-pickup', true);
+		$this->permission_defaults = $this->expectString('permission-defaults', 'op');
+		$permission = new Permission(BlockReplacer::PERMISSION, 'Allows users to bypass block replacement');
+		$permission_manager = PermissionManager::getInstance();
+		$permission_manager->addPermission($permission);
+		$permission_default_register = [
+			'op' => static function () use ($permission_manager, $permission): void {
+				$into_permission = $permission_manager->getPermission(DefaultPermissions::ROOT_OPERATOR) ?? throw new \RuntimeException('Could not obtain permission: ' . DefaultPermissions::ROOT_OPERATOR);
+				$into_permission->addChild($permission->getName(), true);
+			},
+			'all' => static function () use ($permission_manager, $permission): void {
+				$into_permission = $permission_manager->getPermission(DefaultPermissions::ROOT_USER) ?? throw new \RuntimeException('Could not obtain permission: ' . DefaultPermissions::ROOT_USER);
+				$into_permission->addChild($permission->getName(), true);
+			},
+			'none' => static function (): void {
+			},
+		];
 
-		$this->defaultReplace = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.default-replace', 'bedrock'));
-		$this->listBlocks = array_map(static function (string $item): array {
+		if (isset($permission_default_register[$permission_defaults = $this->permission_defaults])) {
+			$permission_default_register[$permission_defaults]();
+		} else {
+			throw new \InvalidArgumentException("Invalid permission-defaults value configured: \"{$permission_defaults}\" (expected one of: " . implode(', ', array_keys($permission_default_register)) . ')');
+		}
+
+		$this->cooldown = $this->expectInt('cooldown', 60);
+		$this->auto_pickup = $this->expectBool('auto-pickup', true);
+
+		$this->default_replace = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.default-replace', 'bedrock'));
+		$this->list_blocks = array_map(static function (string $item): array {
 			$explode = explode('=', $item);
 			return (count($explode) === 2) ? [BlockReplacer::getInstance()->checkItem($explode[0]), BlockReplacer::getInstance()->checkItem($explode[1])] : [BlockReplacer::getInstance()->checkItem($item), null];
 		}, $this->expectStringList('blocks.list', []));
 
-		$particleFrom = null;
-		$particleTo = null;
+		$particle_from = null;
+		$particle_to = null;
 		if ($this->expectBool('particles.enable', true)) {
 			$from = $this->expectString('particles.from', 'minecraft:villager_happy');
 			if (trim($from) !== '') {
-				$particleFrom = $from;
+				$particle_from = $from;
 			}
 			$to = $this->expectString('particles.to', 'minecraft:explosion_particle');
 			if (trim($to) !== '') {
-				$particleTo = $to;
+				$particle_to = $to;
 			}
 		}
-		$this->particleFrom = $particleFrom;
-		$this->particleTo = $particleTo;
+		$this->particle_from = $particle_from;
+		$this->particle_to = $particle_to;
 
-		$soundFrom = null;
-		$soundTo = null;
+		$sound_from = null;
+		$sound_to = null;
 		if ($this->expectBool('sounds.enable', true)) {
 			$volume = $this->expectNumber('sounds.volume', 1.0);
 			$pitch = $this->expectNumber('sounds.pitch', 1.0);
 
 			$from = $this->expectString('sounds.from', 'random.orb');
 			if (trim($from) !== '') {
-				$soundFrom = SoundFactory::create($from, $volume, $pitch);
+				$sound_from = SoundFactory::create($from, $volume, $pitch);
 			}
 			$to = $this->expectString('sounds.to', 'random.explode');
 			if (trim($to) !== '') {
-				$soundTo = SoundFactory::create($to, $volume, $pitch);
+				$sound_to = SoundFactory::create($to, $volume, $pitch);
 			}
 		}
-		$this->soundFrom = $soundFrom;
-		$this->soundTo = $soundTo;
+		$this->sound_from = $sound_from;
+		$this->sound_to = $sound_to;
 
-		$this->enableWorldBlacklist = $this->expectBool('blocks.enable-world-blacklist', false);
-		$this->blacklistedWorlds = $this->expectStringList('blocks.blacklisted-worlds', []);
-		$this->enableWorldWhitelist = $this->expectBool('blocks.enable-world-whitelist', false);
-		$this->whitelistedWorlds = $this->expectStringList('blocks.whitelisted-worlds', []);
+		$this->enable_world_blacklist = $this->expectBool('blocks.enable-world-blacklist', false);
+		$this->blacklisted_worlds = $this->expectStringList('blocks.blacklisted-worlds', []);
+		$this->enable_world_whitelist = $this->expectBool('blocks.enable-world-whitelist', false);
+		$this->whitelisted_worlds = $this->expectStringList('blocks.whitelisted-worlds', []);
 	}
 
 	public function isAutoPickupEnable(): bool
 	{
-		return $this->autoPickup;
+		return $this->auto_pickup;
 	}
 
 	public function getCooldown(): int
@@ -140,7 +169,7 @@ final class ConfigManager
 
 	public function getDefaultReplace(): Item
 	{
-		return $this->defaultReplace;
+		return $this->default_replace;
 	}
 
 	/**
@@ -148,32 +177,32 @@ final class ConfigManager
 	 */
 	public function getListBlocks(): array
 	{
-		return $this->listBlocks;
+		return $this->list_blocks;
 	}
 
 	public function getParticleFrom(): ?string
 	{
-		return $this->particleFrom;
+		return $this->particle_from;
 	}
 
 	public function getParticleTo(): ?string
 	{
-		return $this->particleTo;
+		return $this->particle_to;
 	}
 
 	public function getSoundFrom(): ?SoundImpl
 	{
-		return $this->soundFrom;
+		return $this->sound_from;
 	}
 
 	public function getSoundTo(): ?SoundImpl
 	{
-		return $this->soundTo;
+		return $this->sound_to;
 	}
 
 	public function isWorldBlacklistEnable(): bool
 	{
-		return $this->enableWorldBlacklist;
+		return $this->enable_world_blacklist;
 	}
 
 	/**
@@ -181,12 +210,12 @@ final class ConfigManager
 	 */
 	public function getBlacklistedWorlds(): array
 	{
-		return $this->blacklistedWorlds;
+		return $this->blacklisted_worlds;
 	}
 
 	public function isWorldWhitelistEnable(): bool
 	{
-		return $this->enableWorldWhitelist;
+		return $this->enable_world_whitelist;
 	}
 
 	/**
@@ -194,7 +223,7 @@ final class ConfigManager
 	 */
 	public function getWhitelistedWorlds(): array
 	{
-		return $this->whitelistedWorlds;
+		return $this->whitelisted_worlds;
 	}
 
 	/**

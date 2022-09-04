@@ -38,7 +38,7 @@ final class EventHandler implements Listener
 			[$fromBlock, $toBlock] = $data;
 
 			if ($block->asItem()->equals($fromBlock, true, false)) {
-				if ($player->hasPermission('blockreplacer.bypass')) {
+				if ($player->hasPermission(BlockReplacer::PERMISSION)) {
 					if (!BlockReplacer::getInstance()->checkWorld($player->getWorld())) {
 						return;
 					}

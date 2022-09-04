@@ -28,6 +28,8 @@ final class BlockReplacer extends PluginBase
 {
 	use SingletonTrait;
 
+	public const PERMISSION = 'blockreplacer.bypass';
+
 	public function onEnable(): void
 	{
 		self::setInstance($this);
