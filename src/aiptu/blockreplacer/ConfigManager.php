@@ -34,7 +34,7 @@ final class ConfigManager
 {
 	use SingletonTrait;
 
-	private const CONFIG_VERSION = 1.8;
+	private const CONFIG_VERSION = 1.9;
 
 	private Config $config;
 
