@@ -25,6 +25,7 @@ final class EventHandler implements Listener
 {
 	/**
 	 * @handleCancelled true
+	 *
 	 * @priority HIGH
 	 */
 	public function onBlockBreak(BlockBreakEvent $event): void

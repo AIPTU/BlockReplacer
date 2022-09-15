@@ -25,7 +25,7 @@ A PocketMine-MP plugin that replaces a block with another block at a predetermin
 ```yaml
 ---
 # Do not change this (Only for internal use)!
-config-version: 1.8
+config-version: 2.0
 
 # The time in seconds when the block will be replaced with the previous block.
 cooldown: 60 

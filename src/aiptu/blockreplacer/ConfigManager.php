@@ -151,10 +151,10 @@ final class ConfigManager
 		$this->sound_from = $sound_from;
 		$this->sound_to = $sound_to;
 
-		$this->enable_world_blacklist = $this->expectBool('blocks.enable-world-blacklist', false);
-		$this->blacklisted_worlds = $this->expectStringList('blocks.blacklisted-worlds', []);
-		$this->enable_world_whitelist = $this->expectBool('blocks.enable-world-whitelist', false);
-		$this->whitelisted_worlds = $this->expectStringList('blocks.whitelisted-worlds', []);
+		$this->enable_world_blacklist = $this->expectBool('worlds.enable-world-blacklist', false);
+		$this->blacklisted_worlds = $this->expectStringList('worlds.blacklisted-worlds', []);
+		$this->enable_world_whitelist = $this->expectBool('worlds.enable-world-whitelist', false);
+		$this->whitelisted_worlds = $this->expectStringList('worlds.whitelisted-worlds', []);
 	}
 
 	public function isAutoPickupEnable(): bool
