@@ -29,12 +29,13 @@ final class BlockReplacer extends PluginBase
 	use SingletonTrait;
 
 	public const PERMISSION = 'blockreplacer.bypass';
+	public const PERMISSION_DESCRIPTION = 'Allows users to bypass block replacement';
 
 	public function onEnable(): void
 	{
 		self::setInstance($this);
 
-		ConfigManager::getInstance();
+		ConfigHandler::getInstance();
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventHandler(), $this);
 
@@ -54,8 +55,8 @@ final class BlockReplacer extends PluginBase
 
 	public function checkWorld(World $world): bool
 	{
-		$blacklist = ConfigManager::getInstance()->isWorldBlacklistEnable();
-		$whitelist = ConfigManager::getInstance()->isWorldWhitelistEnable();
+		$blacklist = ConfigHandler::getInstance()->isWorldBlacklistEnable();
+		$whitelist = ConfigHandler::getInstance()->isWorldWhitelistEnable();
 		$worldName = $world->getFolderName();
 
 		if ($blacklist === $whitelist) {
@@ -63,12 +64,12 @@ final class BlockReplacer extends PluginBase
 		}
 
 		if ($blacklist) {
-			$disallowedWorlds = ConfigManager::getInstance()->getBlacklistedWorlds();
+			$disallowedWorlds = ConfigHandler::getInstance()->getBlacklistedWorlds();
 			return !in_array($worldName, $disallowedWorlds, true);
 		}
 
 		if ($whitelist) {
-			$allowedWorlds = ConfigManager::getInstance()->getWhitelistedWorlds();
+			$allowedWorlds = ConfigHandler::getInstance()->getWhitelistedWorlds();
 			return in_array($worldName, $allowedWorlds, true);
 		}
 

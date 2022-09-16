@@ -10,25 +10,32 @@ config-version: 2.0
 #   none: no one is assigned this permission by default
 permission-defaults: "op"
 
-# The time in seconds when the block will be replaced with the previous block.
-cooldown: 60 
-
 # Dropped items will be automatically added to the player's inventory.
 # If the player's inventory is full, the item will be automatically dropped near the player.
 auto-pickup: true
 
 blocks:
-  # The default block to use as a replacement.
-  default-replace: "bedrock"
-  # List of blocks to be replaced.
-  list:
-    - "cobblestone=stone" # It will be replaced from cobblestone to stone.
-    - "dirt=grass"
-    - "oak_log=spruce_log"
-    - "coal_ore" # It will be replaced to the default replacement block.
-    - "diamond_ore"
-    - "gold_ore"
-    - "iron_ore"
+  - from: "cobblestone"
+    to: "stone"
+    time: 5
+  - from: "dirt"
+    to: "grass"
+    time: 5
+  - from: "oak_log"
+    to: "spruce_log"
+    time: 10
+  - from: "coal_ore"
+    to: "bedrock"
+    time: 15
+  - from: "gold_ore"
+    to: "bedrock"
+    time: 20
+  - from: "iron_ore"
+    to: "bedrock"
+    time: 25
+  - from: "diamond_ore"
+    to: "bedrock"
+    time: 30
 
 # Add particles when you destroy blocks.
 particles:

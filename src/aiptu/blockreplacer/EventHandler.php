@@ -33,19 +33,18 @@ final class EventHandler implements Listener
 		$block = $event->getBlock();
 		$player = $event->getPlayer();
 		$world = $block->getPosition()->getWorld();
-		$defaultBlock = ConfigManager::getInstance()->getDefaultReplace();
 
-		foreach (ConfigManager::getInstance()->getListBlocks() as $data) {
-			[$fromBlock, $toBlock] = $data;
+		foreach (ConfigHandler::getInstance()->getBlocks() as $data) {
+			[$block_from, $block_to, $time] = $data;
 
-			if ($block->asItem()->equals($fromBlock, true, false)) {
+			if ($block->asItem()->equals($block_from, true, false)) {
 				if ($player->hasPermission(BlockReplacer::PERMISSION)) {
 					if (!BlockReplacer::getInstance()->checkWorld($player->getWorld())) {
 						return;
 					}
 
 					foreach ($event->getDrops() as $drops) {
-						if (ConfigManager::getInstance()->isAutoPickupEnable()) {
+						if (ConfigHandler::getInstance()->isAutoPickupEnable()) {
 							(!$player->getInventory()->canAddItem($drops)) ? ($world->dropItem($block->getPosition()->add(0.5, 0.5, 0.5), $drops)) : ($player->getInventory()->addItem($drops));
 							(!$player->getXpManager()->canPickupXp()) ? ($world->dropExperience($block->getPosition()->add(0.5, 0.5, 0.5), $event->getXpDropAmount())) : ($player->getXpManager()->addXp($event->getXpDropAmount()));
 
@@ -58,51 +57,54 @@ final class EventHandler implements Listener
 
 					$event->cancel();
 
-					$particleFrom = ConfigManager::getInstance()->getParticleFrom();
-					if ($particleFrom !== null) {
+					$particle_from = ConfigHandler::getInstance()->getParticleFrom();
+					if ($particle_from !== null) {
 						BlockReplacer::getInstance()->getServer()->broadcastPackets($world->getPlayers(), [
-							SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $block->getPosition()->up(), $particleFrom, null),
+							SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $block->getPosition()->up(), $particle_from, null),
 						]);
 					}
-					$soundFrom = ConfigManager::getInstance()->getSoundFrom();
-					if ($soundFrom !== null) {
-						$world->addSound($block->getPosition(), $soundFrom);
+
+					$sound_from = ConfigHandler::getInstance()->getSoundFrom();
+					if ($sound_from !== null) {
+						$world->addSound($block->getPosition(), $sound_from);
 					}
 
-					if ($toBlock === null) {
-						self::setBlock($block, $defaultBlock->getBlock());
+					if ($block_to === null) {
+						self::setBlock($block, $block_from);
 					} else {
-						self::setBlock($block, $toBlock->getBlock());
+						self::setBlock($block, $block_to);
 					}
 
 					BlockReplacer::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(static function () use ($block, $world): void {
 						self::setBlock($block, $block);
-						$particleTo = ConfigManager::getInstance()->getParticleTo();
-						if ($particleTo !== null) {
+
+						$particle_to = ConfigHandler::getInstance()->getParticleTo();
+						if ($particle_to !== null) {
 							BlockReplacer::getInstance()->getServer()->broadcastPackets($world->getPlayers(), [
-								SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $block->getPosition()->up(), $particleTo, null),
+								SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $block->getPosition()->up(), $particle_to, null),
 							]);
 						}
-						$soundTo = ConfigManager::getInstance()->getSoundTo();
-						if ($soundTo !== null) {
-							$world->addSound($block->getPosition(), $soundTo);
+
+						$sound_to = ConfigHandler::getInstance()->getSoundTo();
+						if ($sound_to !== null) {
+							$world->addSound($block->getPosition(), $sound_to);
 						}
-					}), ConfigManager::getInstance()->getCooldown());
+					}), $time);
 				}
 			}
 		}
 	}
 
-	private static function setBlock(Block $fromBlock, Block $toBlock): void
+	private static function setBlock(Block $block_from, Block $block_to): void
 	{
-		$world = $fromBlock->getPosition()->getWorld();
-		$x = $fromBlock->getPosition()->getFloorX();
-		$z = $fromBlock->getPosition()->getFloorZ();
+		$world = $block_from->getPosition()->getWorld();
+		$x = $block_from->getPosition()->getFloorX();
+		$z = $block_from->getPosition()->getFloorZ();
 
 		$world->orderChunkPopulation($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE, null)->onCompletion(
-			static function (Chunk $chunk) use ($fromBlock, $toBlock, $world): void {
-				$world->setBlock($fromBlock->getPosition(), $toBlock);
-				$world->getLogger()->debug('Replacing the block from "' . $fromBlock->getName() . '" to "' . $toBlock->getName() . '"');
+			static function (Chunk $chunk) use ($block_from, $block_to, $world): void {
+				$world->setBlock($block_from->getPosition(), $block_to);
+				$world->getLogger()->debug('Replacing the block from "' . $block_from->getName() . '" to "' . $block_to->getName() . '"');
 			},
 			static function () use ($world): void {
 				$world->getLogger()->error('An error that occurred while replacing the block');

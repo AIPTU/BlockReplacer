@@ -15,16 +15,14 @@ namespace aiptu\blockreplacer;
 
 use DiamondStrider1\Sounds\SoundFactory;
 use DiamondStrider1\Sounds\SoundImpl;
-use pocketmine\item\Item;
+use pocketmine\item\StringToItemParser;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 use function array_keys;
-use function array_map;
-use function count;
-use function explode;
+use function array_rand;
 use function gettype;
 use function implode;
 use function is_array;
@@ -32,10 +30,11 @@ use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
+use function mt_rand;
 use function rename;
 use function trim;
 
-final class ConfigManager
+final class ConfigHandler
 {
 	use SingletonTrait;
 
@@ -44,11 +43,9 @@ final class ConfigManager
 	private Config $config;
 
 	private string $permission_defaults;
-	private int $cooldown;
 	private bool $auto_pickup;
-	private Item $default_replace;
-	/** @var array<array{Item, Item|null}> */
-	private array $list_blocks;
+	/** @var array<int, int|\pocketmine\block\Block> */
+	private array $blocks;
 	private ?string $particle_from;
 	private ?string $particle_to;
 	private ?SoundImpl $sound_from;
@@ -87,7 +84,7 @@ final class ConfigManager
 		$this->config = $config;
 
 		$this->permission_defaults = $this->expectString('permission-defaults', 'op');
-		$permission = new Permission(BlockReplacer::PERMISSION, 'Allows users to bypass block replacement');
+		$permission = new Permission(BlockReplacer::PERMISSION, BlockReplacer::PERMISSION_DESCRIPTION);
 		$permission_manager = PermissionManager::getInstance();
 		$permission_manager->addPermission($permission);
 		$permission_default_register = [
@@ -109,14 +106,12 @@ final class ConfigManager
 			throw new \InvalidArgumentException("Invalid permission-defaults value configured: \"{$permission_defaults}\" (expected one of: " . implode(', ', array_keys($permission_default_register)) . ')');
 		}
 
-		$this->cooldown = $this->expectInt('cooldown', 60);
 		$this->auto_pickup = $this->expectBool('auto-pickup', true);
 
-		$this->default_replace = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.default-replace', 'bedrock'));
-		$this->list_blocks = array_map(static function (string $item): array {
-			$explode = explode('=', $item);
-			return (count($explode) === 2) ? [BlockReplacer::getInstance()->checkItem($explode[0]), BlockReplacer::getInstance()->checkItem($explode[1])] : [BlockReplacer::getInstance()->checkItem($item), null];
-		}, $this->expectStringList('blocks.list', []));
+		$block_from = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.from', (string) array_rand(StringToItemParser::getInstance()->getKnownAliases())));
+		$block_to = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.to', (string) array_rand(StringToItemParser::getInstance()->getKnownAliases())));
+		$time = $this->expectInt('blocks.time', mt_rand(1, 60));
+		$this->blocks = [$block_from->getBlock(), $block_to->getBlock(), $time];
 
 		$particle_from = null;
 		$particle_to = null;
@@ -162,22 +157,9 @@ final class ConfigManager
 		return $this->auto_pickup;
 	}
 
-	public function getCooldown(): int
+	public function getBlocks(): array
 	{
-		return 20 * $this->cooldown;
-	}
-
-	public function getDefaultReplace(): Item
-	{
-		return $this->default_replace;
-	}
-
-	/**
-	 * @return array<array{Item, Item|null}>
-	 */
-	public function getListBlocks(): array
-	{
-		return $this->list_blocks;
+		return $this->blocks;
 	}
 
 	public function getParticleFrom(): ?string
