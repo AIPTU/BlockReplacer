@@ -15,27 +15,19 @@ permission-defaults: "op"
 auto-pickup: true
 
 blocks:
-  - from: "cobblestone"
-    to: "stone"
-    time: 5
-  - from: "dirt"
-    to: "grass"
-    time: 5
-  - from: "oak_log"
-    to: "spruce_log"
-    time: 10
-  - from: "coal_ore"
-    to: "bedrock"
-    time: 15
-  - from: "gold_ore"
-    to: "bedrock"
-    time: 20
-  - from: "iron_ore"
-    to: "bedrock"
-    time: 25
-  - from: "diamond_ore"
-    to: "bedrock"
-    time: 30
+  # The default block to use as a replacement.
+  default-replace: "bedrock"
+  # The time in seconds when the block will be replaced with the previous block.
+  default-time: 60
+  # List of blocks to be replaced.
+  # The format you can use: "<block_from>=<block_to>=<time>"
+  list:
+    - "cobblestone=stone=5" # It will be replaced from cobblestone to stone and will be replaced with the previous block within 5 seconds.
+    - "oak_log=spruce_log=10"
+    - "coal_ore=stone" # It will be replaced to the default replacement time.
+    - "diamond_ore=stone"
+    - "gold_ore" # It will be replaced to the default replacement block and default replacement time.
+    - "iron_ore"
 
 # Add particles when you destroy blocks.
 particles:

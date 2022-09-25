@@ -15,14 +15,16 @@ namespace aiptu\blockreplacer;
 
 use DiamondStrider1\Sounds\SoundFactory;
 use DiamondStrider1\Sounds\SoundImpl;
-use pocketmine\item\StringToItemParser;
+use pocketmine\item\Item;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 use function array_keys;
-use function array_rand;
+use function array_map;
+use function count;
+use function explode;
 use function gettype;
 use function implode;
 use function is_array;
@@ -30,7 +32,6 @@ use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
-use function mt_rand;
 use function rename;
 use function trim;
 
@@ -44,8 +45,10 @@ final class ConfigHandler
 
 	private string $permission_defaults;
 	private bool $auto_pickup;
-	/** @var array<int, int|\pocketmine\block\Block> */
-	private array $blocks;
+	private Item $default_replace;
+	private int $default_time;
+	/** @array<int, array<int, int|Item|null>> */
+	private array $list_blocks;
 	private ?string $particle_from;
 	private ?string $particle_to;
 	private ?SoundImpl $sound_from;
@@ -108,10 +111,22 @@ final class ConfigHandler
 
 		$this->auto_pickup = $this->expectBool('auto-pickup', true);
 
-		$block_from = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.from', (string) array_rand(StringToItemParser::getInstance()->getKnownAliases())));
-		$block_to = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.to', (string) array_rand(StringToItemParser::getInstance()->getKnownAliases())));
-		$time = $this->expectInt('blocks.time', mt_rand(1, 60));
-		$this->blocks = [$block_from->getBlock(), $block_to->getBlock(), $time];
+		$this->default_replace = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.default-replace', 'bedrock'));
+		$this->default_time = $this->expectInt('blocks.default-time', 60);
+
+		$this->list_blocks = array_map(static function (string $block): array {
+			$v = explode('=', $block);
+			$arr = [];
+
+			if (count($v) === 3) {
+				$arr = [BlockReplacer::getInstance()->checkItem($v[0]), BlockReplacer::getInstance()->checkItem($v[1]), 20 * (int) $v[2]];
+			} elseif (count($v) === 2) {
+				$arr = [BlockReplacer::getInstance()->checkItem($v[0]), BlockReplacer::getInstance()->checkItem($v[1]), null];
+			} else {
+				$arr = [BlockReplacer::getInstance()->checkItem($v[0]), null, null];
+			}
+			return $arr;
+		}, $this->expectStringList('blocks.list', []));
 
 		$particle_from = null;
 		$particle_to = null;
@@ -157,9 +172,19 @@ final class ConfigHandler
 		return $this->auto_pickup;
 	}
 
-	public function getBlocks(): array
+	public function getDefaultReplace(): Item
 	{
-		return $this->blocks;
+		return $this->default_replace;
+	}
+
+	public function getDefaultTime(): int
+	{
+		return 20 * $this->default_time;
+	}
+
+	public function getListBlocks(): array
+	{
+		return $this->list_blocks;
 	}
 
 	public function getParticleFrom(): ?string
@@ -187,9 +212,6 @@ final class ConfigHandler
 		return $this->enable_world_blacklist;
 	}
 
-	/**
-	 * @return array<string>
-	 */
 	public function getBlacklistedWorlds(): array
 	{
 		return $this->blacklisted_worlds;
@@ -200,9 +222,6 @@ final class ConfigHandler
 		return $this->enable_world_whitelist;
 	}
 
-	/**
-	 * @return array<string>
-	 */
 	public function getWhitelistedWorlds(): array
 	{
 		return $this->whitelisted_worlds;

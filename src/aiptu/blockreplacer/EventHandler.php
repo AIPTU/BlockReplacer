@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer;
 
-use pocketmine\block\Block;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\scheduler\ClosureTask;
-use pocketmine\world\format\Chunk;
 
 final class EventHandler implements Listener
 {
@@ -33,8 +31,10 @@ final class EventHandler implements Listener
 		$block = $event->getBlock();
 		$player = $event->getPlayer();
 		$world = $block->getPosition()->getWorld();
+		$default_replace = ConfigHandler::getInstance()->getDefaultReplace();
+		$default_time = ConfigHandler::getInstance()->getDefaultTime();
 
-		foreach (ConfigHandler::getInstance()->getBlocks() as $data) {
+		foreach (ConfigHandler::getInstance()->getListBlocks() as $data) {
 			[$block_from, $block_to, $time] = $data;
 
 			if ($block->asItem()->equals($block_from, true, false)) {
@@ -57,6 +57,12 @@ final class EventHandler implements Listener
 
 					$event->cancel();
 
+					if ($block_to === null) {
+						BlockReplacer::getInstance()->setBlock($world, $block, $default_replace->getBlock());
+					} else {
+						BlockReplacer::getInstance()->setBlock($world, $block, $block_to->getBlock());
+					}
+
 					$particle_from = ConfigHandler::getInstance()->getParticleFrom();
 					if ($particle_from !== null) {
 						BlockReplacer::getInstance()->getServer()->broadcastPackets($world->getPlayers(), [
@@ -69,14 +75,8 @@ final class EventHandler implements Listener
 						$world->addSound($block->getPosition(), $sound_from);
 					}
 
-					if ($block_to === null) {
-						self::setBlock($block, $block_from);
-					} else {
-						self::setBlock($block, $block_to);
-					}
-
 					BlockReplacer::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(static function () use ($block, $world): void {
-						self::setBlock($block, $block);
+						BlockReplacer::getInstance()->setBlock($world, $block, $block);
 
 						$particle_to = ConfigHandler::getInstance()->getParticleTo();
 						if ($particle_to !== null) {
@@ -89,26 +89,9 @@ final class EventHandler implements Listener
 						if ($sound_to !== null) {
 							$world->addSound($block->getPosition(), $sound_to);
 						}
-					}), $time);
+					}), $time ?? $default_time);
 				}
 			}
 		}
-	}
-
-	private static function setBlock(Block $block_from, Block $block_to): void
-	{
-		$world = $block_from->getPosition()->getWorld();
-		$x = $block_from->getPosition()->getFloorX();
-		$z = $block_from->getPosition()->getFloorZ();
-
-		$world->orderChunkPopulation($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE, null)->onCompletion(
-			static function (Chunk $chunk) use ($block_from, $block_to, $world): void {
-				$world->setBlock($block_from->getPosition(), $block_to);
-				$world->getLogger()->debug('Replacing the block from "' . $block_from->getName() . '" to "' . $block_to->getName() . '"');
-			},
-			static function () use ($world): void {
-				$world->getLogger()->error('An error that occurred while replacing the block');
-			},
-		);
 	}
 }

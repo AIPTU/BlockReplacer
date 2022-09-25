@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace aiptu\blockreplacer;
 
 use JackMD\UpdateNotifier\UpdateNotifier;
+use pocketmine\block\Block;
 use pocketmine\item\Item;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\LegacyStringToItemParserException;
 use pocketmine\item\StringToItemParser;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\SingletonTrait;
+use pocketmine\world\format\Chunk;
 use pocketmine\world\World;
 use function class_exists;
 use function in_array;
@@ -57,23 +59,39 @@ final class BlockReplacer extends PluginBase
 	{
 		$blacklist = ConfigHandler::getInstance()->isWorldBlacklistEnable();
 		$whitelist = ConfigHandler::getInstance()->isWorldWhitelistEnable();
-		$worldName = $world->getFolderName();
+		$world_name = $world->getFolderName();
 
 		if ($blacklist === $whitelist) {
 			return true;
 		}
 
 		if ($blacklist) {
-			$disallowedWorlds = ConfigHandler::getInstance()->getBlacklistedWorlds();
-			return !in_array($worldName, $disallowedWorlds, true);
+			$disallowed_worlds = ConfigHandler::getInstance()->getBlacklistedWorlds();
+			return !in_array($world_name, $disallowed_worlds, true);
 		}
 
 		if ($whitelist) {
-			$allowedWorlds = ConfigHandler::getInstance()->getWhitelistedWorlds();
-			return in_array($worldName, $allowedWorlds, true);
+			$allowed_worlds = ConfigHandler::getInstance()->getWhitelistedWorlds();
+			return in_array($world_name, $allowed_worlds, true);
 		}
 
 		return false;
+	}
+
+	public function setBlock(World $world, Block $block_from, Block $block_to): void
+	{
+		$x = $block_from->getPosition()->getFloorX();
+		$z = $block_from->getPosition()->getFloorZ();
+
+		$world->orderChunkPopulation($x >> Chunk::COORD_BIT_SIZE, $z >> Chunk::COORD_BIT_SIZE, null)->onCompletion(
+			static function (Chunk $chunk) use ($block_from, $block_to, $world): void {
+				$world->setBlock($block_from->getPosition(), $block_to);
+				$world->getLogger()->debug('Replacing the block from "' . $block_from->getName() . '" to "' . $block_to->getName() . '"');
+			},
+			static function () use ($block_from, $block_to, $world): void {
+				$world->getLogger()->error('An error that occurred while replacing the block from "' . $block_from->getName() . '" to "' . $block_to->getName() . '"');
+			},
+		);
 	}
 
 	private function checkUpdate(): void
