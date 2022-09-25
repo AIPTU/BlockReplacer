@@ -4,7 +4,7 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "pocketmine/pocketmine-mp": "^4.8",
+        "pocketmine/pocketmine-mp": "^4.9",
         "ifera-mc/updatenotifier": "^3",
         "diamondstrider1/sounds": "^1.2"
     },
