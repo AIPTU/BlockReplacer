@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer;
 
+use aiptu\blockreplacer\utils\ConfigHandler;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
@@ -58,9 +59,9 @@ final class EventHandler implements Listener
 					$event->cancel();
 
 					if ($block_to === null) {
-						BlockReplacer::getInstance()->setBlock($world, $block, $default_replace->getBlock());
+						BlockReplacer::getInstance()->setBlock($world, $block, $default_replace);
 					} else {
-						BlockReplacer::getInstance()->setBlock($world, $block, $block_to->getBlock());
+						BlockReplacer::getInstance()->setBlock($world, $block, $block_to);
 					}
 
 					$particle_from = ConfigHandler::getInstance()->getParticleFrom();

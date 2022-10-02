@@ -20,12 +20,12 @@ blocks:
   # The time in seconds when the block will be replaced with the previous block.
   default-time: 60
   # List of blocks to be replaced.
-  # The format you can use: "<block_from>=<block_to>=<time>"
+  # The format you can use: "<block_from>:<block_to>:<time>"
   list:
-    - "cobblestone=stone=5" # It will be replaced from cobblestone to stone and will be replaced with the previous block within 5 seconds.
-    - "oak_log=spruce_log=10"
-    - "coal_ore=stone" # It will be replaced to the default replacement time.
-    - "diamond_ore=stone"
+    - "cobblestone:stone:5" # It will be replaced from cobblestone to stone and will be replaced with the previous block within 5 seconds.
+    - "oak_log:spruce_log:10"
+    - "coal_ore:stone" # It will be replaced to the default replacement time.
+    - "diamond_ore:stone"
     - "gold_ore" # It will be replaced to the default replacement block and default replacement time.
     - "iron_ore"
 

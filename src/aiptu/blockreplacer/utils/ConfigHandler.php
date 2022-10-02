@@ -11,11 +11,12 @@
 
 declare(strict_types=1);
 
-namespace aiptu\blockreplacer;
+namespace aiptu\blockreplacer\utils;
 
+use aiptu\blockreplacer\BlockReplacer;
 use DiamondStrider1\Sounds\SoundFactory;
 use DiamondStrider1\Sounds\SoundImpl;
-use pocketmine\item\Item;
+use pocketmine\block\Block;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
@@ -45,9 +46,9 @@ final class ConfigHandler
 
 	private string $permission_defaults;
 	private bool $auto_pickup;
-	private Item $default_replace;
+	private Block $default_replace;
 	private int $default_time;
-	/** @array<int, array<int, int|Item|null>> */
+	/** @array<int, array<int, int|Block|null>> */
 	private array $list_blocks;
 	private ?string $particle_from;
 	private ?string $particle_to;
@@ -111,19 +112,19 @@ final class ConfigHandler
 
 		$this->auto_pickup = $this->expectBool('auto-pickup', true);
 
-		$this->default_replace = BlockReplacer::getInstance()->checkItem($this->expectString('blocks.default-replace', 'bedrock'));
+		$this->default_replace = BlockReplacer::getInstance()->getBlock($this->expectString('blocks.default-replace', 'bedrock'));
 		$this->default_time = $this->expectInt('blocks.default-time', 60);
 
-		$this->list_blocks = array_map(static function (string $block): array {
-			$v = explode('=', $block);
+		$this->list_blocks = array_map(static function (string $blockInfo): array {
+			$parts = explode(':', $blockInfo);
 			$arr = [];
 
-			if (count($v) === 3) {
-				$arr = [BlockReplacer::getInstance()->checkItem($v[0]), BlockReplacer::getInstance()->checkItem($v[1]), 20 * (int) $v[2]];
-			} elseif (count($v) === 2) {
-				$arr = [BlockReplacer::getInstance()->checkItem($v[0]), BlockReplacer::getInstance()->checkItem($v[1]), null];
+			if (count($parts) === 3) {
+				$arr = [BlockReplacer::getInstance()->getBlock($parts[0]), BlockReplacer::getInstance()->getBlock($parts[1]), 20 * (int) $parts[2]];
+			} elseif (count($parts) === 2) {
+				$arr = [BlockReplacer::getInstance()->getBlock($parts[0]), BlockReplacer::getInstance()->getBlock($parts[1]), null];
 			} else {
-				$arr = [BlockReplacer::getInstance()->checkItem($v[0]), null, null];
+				$arr = [BlockReplacer::getInstance()->getBlock($parts[0]), null, null];
 			}
 			return $arr;
 		}, $this->expectStringList('blocks.list', []));
@@ -172,7 +173,7 @@ final class ConfigHandler
 		return $this->auto_pickup;
 	}
 
-	public function getDefaultReplace(): Item
+	public function getDefaultReplace(): Block
 	{
 		return $this->default_replace;
 	}

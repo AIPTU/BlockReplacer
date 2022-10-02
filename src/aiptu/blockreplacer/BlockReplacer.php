@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer;
 
+use aiptu\blockreplacer\utils\BlockUtils;
+use aiptu\blockreplacer\utils\ConfigHandler;
 use JackMD\UpdateNotifier\UpdateNotifier;
 use pocketmine\block\Block;
-use pocketmine\item\Item;
-use pocketmine\item\LegacyStringToItemParser;
-use pocketmine\item\LegacyStringToItemParserException;
-use pocketmine\item\StringToItemParser;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\Chunk;
@@ -44,15 +42,14 @@ final class BlockReplacer extends PluginBase
 		$this->checkUpdate();
 	}
 
-	public function checkItem(string $string): Item
+	public function getBlock(string $string): Block
 	{
-		try {
-			$item = StringToItemParser::getInstance()->parse($string) ?? LegacyStringToItemParser::getInstance()->parse($string);
-		} catch (LegacyStringToItemParserException $e) {
-			throw $e;
+		$block = BlockUtils::fromString($string);
+		if ($block === null) {
+			throw new \InvalidArgumentException('Unable to parse "' . $string . '" to a valid block');
 		}
 
-		return $item;
+		return $block;
 	}
 
 	public function checkWorld(World $world): bool
