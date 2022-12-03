@@ -30,6 +30,11 @@ abstract class BlockEvent extends Event
 		return $this->block;
 	}
 
+	public function setBlock(Block $block): void
+	{
+		$this->block = $block;
+	}
+
 	public function getPosition(): Position
 	{
 		return $this->position;
