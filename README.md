@@ -12,9 +12,11 @@ A PocketMine-MP plugin that replaces a block with another block at a predetermin
 - Custom cooldown replacement.
 - Automatic item pickup support.
 - Custom block replacement.
+- Custom drop block.
 - World blacklist and whitelist support.
 - Support for sound customization.
 - Support for particle customization.
+- Support for block replacement when the server is stopped.
 - Lightweight and open source ❤️
 
 # Permissions
@@ -24,40 +26,93 @@ A PocketMine-MP plugin that replaces a block with another block at a predetermin
 # Default Config
 ```yaml
 ---
-# Do not change this (Only for internal use)!
-config-version: 2.0
-
-# The time in seconds when the block will be replaced with the previous block.
-cooldown: 60 
+# Permission defaults for the "blockreplacer.bypass" permission
+# This permission allows players to bypass block replacement.
+# Valid values:
+#   op: all server operators (ops) are assigned this permission by default
+#   all: everyone is assigned this permission by default
+#   none: no one is assigned this permission by default
+permission:
+  defaults: "op"
 
 # Dropped items will be automatically added to the player's inventory.
 # If the player's inventory is full, the item will be automatically dropped near the player.
-auto-pickup: true
+# This will also include experience points.
+auto-pickup:
+  enabled: true
 
 blocks:
-  # The default block to use as a replacement.
-  default-replace: "bedrock"
+  # The default block is used as a replacement.
+  default-replace: "air"
+  # The default time is used as a replacement.
+  # The time in seconds when the block will be replaced with the previous block.
+  default-time: 60
   # List of blocks to be replaced.
+  # This should also always be wrapped in quotes to ensure it is parsed correctly.
   list:
-    - "cobblestone=stone" # It will be replaced from cobblestone to stone.
-    - "dirt=grass"
-    - "oak_log=spruce_log"
-    - "coal_ore" # It will be replaced to the default replacement block.
-    - "diamond_ore"
-    - "gold_ore"
-    - "iron_ore"
+    # This should follow the format: "block_from=block_to=time".
+    # If "block_to" is not set, it will replaced to the default replacement block.
+    # If "time" is not set, it will replaced to the default replacement time.
+    "cobblestone=stone=5": # It will be replaced from cobblestone to stone and will be replaced with the previous block within 5 seconds.
+      # This should follow the format: "item:amount:chance".
+      drops: []
+    "oak_log=spruce_log=10":
+      drops:
+        - item: "spruce_log"
+          amount: 1
+          chance: 70
+        - item: "spruce_leaves"
+          amount: 2
+          chance: 50
+    "coal_ore=stone": # It will be replaced to the default replacement time.
+      drops:
+        - item: "coal"
+          amount: 2
+          chance: 90
+    "diamond_ore=stone":
+      drops:
+        - item: "diamond_sword"
+          amount: 1
+          chance: 1
+          name: "&cLifesteal &4Sword"
+          lore:
+            - "&6Steals health upon hitting enemy."
+            - "&b!!!"
+          enchantments:
+            - name: "sharpness"
+              level: 3
+            - name: "lifesteal"
+              level: 1
+    "gold_ore": # It will be replaced to the default replacement block and default replacement time.
+      drops:
+        - item: "gold_ingot"
+          amount: 1
+          chance: 20
+        - item: "gold_nugget"
+          amount: 1
+          chance: 10
+    "iron_ore=bedrock":
+      drops:
+        - item: "iron_ingot"
+          amount: 1
+          chance: 20
+        - item: "iron_nugget"
+          amount: 1
+          chance: 10
+    "sweet_berry_bush:3=sweet_berry_bush:1=5":
+      drops: []
 
-# Add particles when you destroy blocks.
 particles:
+  # Whether to add particles when destroying blocks.
+  enabled: true
   # The name of the particle that will be added when destroying the previous block.
   from: "minecraft:villager_happy"
   # The name of the particle that will be added when replacing the block after it.
   to: "minecraft:explosion_particle"
 
-# Add sound when you destroy blocks.
 sounds:
-  # Do you want to add sound?
-  enable: true
+  # Whether to add sound when destroying blocks.
+  enabled: true
   # Set the volume sound.
   volume: 1
   # Set the pitch sound.
@@ -69,19 +124,19 @@ sounds:
 
 worlds:
   # Set this to true if you want to use the blacklisted-worlds setting.
-  # If both enable-world-blacklist and disable-world-blacklist are set to the same setting,
+  # If both enabled-world-blacklist and enabled-world-whitelist are set to the same setting,
   # the block will be replaced for all worlds.
-  enable-world-blacklist: false
-  # If enable-world-blacklist is set to true, the block will be replaced for all worlds,
+  enabled-world-blacklist: false
+  # If enabled-world-blacklist is set to true, the block will be replaced for all worlds,
   # except the world mentioned here.
   blacklisted-worlds:
     - "blacklistedworld1"
     - "blacklistedworld2"
   # Set this to true if you want to use the whitelisted-worlds setting.
-  # If both enable-world-blacklist and disable-world-blacklist are set to the same setting,
+  # If both enabled-world-blacklist and enabled-world-blacklist are set to the same setting,
   # the block will not be replaced for all worlds.
-  enable-world-whitelist: false
-  # If enable-world-whitelist is set to true, blocks will not be replaced for all worlds,
+  enabled-world-whitelist: false
+  # If enabled-world-whitelist is set to true, blocks will not be replaced for all worlds,
   # except the worlds mentioned here.
   whitelisted-worlds:
     - "whitelistedworld1"
