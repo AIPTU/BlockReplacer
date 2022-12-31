@@ -17,6 +17,7 @@ A PocketMine-MP plugin that replaces a block with another block at a predetermin
 - Support for sound customization.
 - Support for particle customization.
 - Support for block replacement when the server is stopped.
+- Support block replacement in different time.
 - Lightweight and open source ❤️
 
 # Permissions
