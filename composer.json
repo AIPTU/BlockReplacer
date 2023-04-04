@@ -6,12 +6,12 @@
     "require": {
         "diamondstrider1/sounds": "^1.2",
         "ifera-mc/updatenotifier": "^3",
-        "pocketmine/pocketmine-mp": "^4.12"
+        "pocketmine/pocketmine-mp": "^4.18"
     },
     "require-dev": {
         "phpstan/extension-installer": "^1.2",
-        "phpstan/phpstan": "^1.9",
-        "phpstan/phpstan-strict-rules": "^1.4"
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-strict-rules": "^1.5"
     },
     "repositories": {
         "updatenotifier": {
