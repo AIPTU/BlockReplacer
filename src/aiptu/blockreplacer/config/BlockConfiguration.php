@@ -28,7 +28,7 @@ final class BlockConfiguration
 	{
 		$instance = new self(
 			ConfigurationHelper::readString($data, 'default-replace'),
-			ConfigurationHelper::readInt($data, 'default-time', 1, 60),
+			ConfigurationHelper::readInt($data, 'default-time', 1),
 			ConfigurationHelper::readMap($data, 'list'),
 		);
 		ConfigurationHelper::checkForUnread($data);
