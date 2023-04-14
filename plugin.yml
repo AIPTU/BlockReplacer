@@ -1,7 +1,7 @@
 name: BlockReplacer
 main: aiptu\blockreplacer\BlockReplacer
 version: 3.0.0-dev
-api: 4.0.0
+api: 5.0.0
 author: AIPTU
 softdepend:
   - PiggyCustomEnchants
