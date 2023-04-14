@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-use aiptu\blockreplacer\BlockReplacer;
 use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\world\World;
@@ -66,7 +66,7 @@ final class ParticleConfiguration
 			return;
 		}
 
-		BlockReplacer::getInstance()->getServer()->broadcastPackets($world->getPlayers(), [
+		NetworkBroadcastUtils::broadcastPackets($world->getPlayers(), [
 			SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $position->up(), $particle, null),
 		]);
 	}
