@@ -13,55 +13,58 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\utils;
 
-use pocketmine\block\Air;
-use pocketmine\block\Block;
-use pocketmine\item\Item;
-use pocketmine\item\LegacyStringToItemParser;
-use pocketmine\item\LegacyStringToItemParserException;
-use pocketmine\item\StringToItemParser;
-use pocketmine\Server;
 use pocketmine\world\Position;
 use function explode;
 use function implode;
-use function str_replace;
-use function strtolower;
-use function trim;
+use function is_int;
+use function is_string;
+use function mt_rand;
 
-final class Utils
-{
-	public static function posToStr(Position $position): string
-	{
+class Utils {
+	/**
+	 * Serializes a Position object into a string representation.
+	 *
+	 * @param Position $position the position object to be serialized
+	 *
+	 * @return string the serialized string representation of the position
+	 */
+	public static function serializePosition(Position $position) : string {
 		return implode(':', [$position->getFloorX(), $position->getFloorY(), $position->getFloorZ(), $position->getWorld()->getFolderName()]);
 	}
 
-	public static function strToPos(string $position): Position
-	{
-		[$x, $y, $z, $world] = explode(':', $position);
-		return new Position((int) $x, (int) $y, (int) $z, Server::getInstance()->getWorldManager()->getWorldByName($world));
-	}
-
-	public static function parseItem(string $input): ?Item
-	{
-		$string = strtolower(str_replace([' ', 'minecraft:'], ['_', ''], trim($input)));
-		try {
-			$item = StringToItemParser::getInstance()->parse($string) ?? LegacyStringToItemParser::getInstance()->parse($string);
-		} catch (LegacyStringToItemParserException $e) {
-			return null;
+	/**
+	 * Parses the item amount, which can be a single value or a range.
+	 *
+	 * @param mixed $amount the item amount or range
+	 *
+	 * @return int the parsed item amount
+	 */
+	public static function parseAmount($amount) : int {
+		if (is_int($amount)) {
+			return $amount;
 		}
 
-		return $item->isNull() ? null : $item;
+		if (is_string($amount)) {
+			$range = explode('-', $amount);
+			$min = isset($range[0]) ? (int) $range[0] : 1;
+			$max = isset($range[1]) ? (int) $range[1] : $min;
+
+			return mt_rand($min, $max);
+		}
+
+		return 1; // Default to 1 if amount is invalid
 	}
 
-	public static function parseBlock(string $input): ?Block
-	{
-		$string = strtolower(str_replace([' ', 'minecraft:'], ['_', ''], trim($input)));
-		try {
-			$item = StringToItemParser::getInstance()->parse($string) ?? LegacyStringToItemParser::getInstance()->parse($string);
-		} catch (LegacyStringToItemParserException $e) {
-			return null;
-		}
-		$block = $item->getBlock();
+	/**
+	 * Checks if the chance condition is met.
+	 *
+	 * @param mixed $chance the chance value
+	 *
+	 * @return bool true if the chance is successful, false otherwise
+	 */
+	public static function checkChance($chance) : bool {
+		$parsedChance = self::parseAmount($chance);
 
-		return $block->canBePlaced() || ($block instanceof Air) ? $block : null;
+		return $parsedChance >= 100 || mt_rand(1, 100) <= $parsedChance;
 	}
 }

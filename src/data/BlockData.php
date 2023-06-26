@@ -22,102 +22,142 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\world\Position;
 use function time;
 
-final class BlockData
-{
-	private bool $refilled = true;
-
+class BlockData {
+	private bool $isRestored = true;
 	private int $lastAccessTime = -1;
 
 	public function __construct(
-		private Position $pos,
-		private Block $previousBlock,
-		private Block $nextBlock,
-		private int $time,
+		private readonly Position $position,
+		private readonly Block $replacedBlock,
+		private readonly Block $replacementBlock,
+		private readonly int $restoreDuration
 	) {}
 
-	public function getPosition(): Position
-	{
-		return $this->pos;
+	/**
+	 * Get the position of the block.
+	 */
+	public function getPosition() : Position {
+		return $this->position;
 	}
 
-	public function getPreviousBlock(): Block
-	{
-		return $this->previousBlock;
+	/**
+	 * Get the replaced block.
+	 */
+	public function getReplacedBlock() : Block {
+		return $this->replacedBlock;
 	}
 
-	public function getNextBlock(): Block
-	{
-		return $this->nextBlock;
+	/**
+	 * Get the replacement block.
+	 */
+	public function getReplacementBlock() : Block {
+		return $this->replacementBlock;
 	}
 
-	public function break(Player $player): void
-	{
-		if (!$this->refilled) {
-			return;
-		}
-		$this->setAccessTime(time());
-		$ev = new BlockReplaceEvent($player, $this->getNextBlock(), $this->pos);
-		$ev->call();
-		if ($ev->isCancelled()) {
-			return;
-		}
-		$block = $ev->getBlock();
-		$position = $ev->getPosition();
-		$world = $position->getWorld();
-		BlockReplacer::getInstance()->getScheduler()->scheduleTask(new ClosureTask(static function () use ($block, $position, $world): void {
-			$world->setBlock($position, $block);
-			BlockReplacer::getInstance()->getConfiguration()->getParticle()->addFrom($world, $position);
-			BlockReplacer::getInstance()->getConfiguration()->getSound()->addFrom($world, $position);
-		}));
-		$this->setRefilled(false);
+	/**
+	 * Set the last access time of the block.
+	 */
+	public function setLastAccessTime(int $lastAccessTime) : void {
+		$this->lastAccessTime = $lastAccessTime;
 	}
 
-	public function setAccessTime(int $time): void
-	{
-		$this->lastAccessTime = $time;
-	}
-
-	public function getLastAccessTime(): int
-	{
+	/**
+	 * Get the last access time of the block.
+	 */
+	public function getLastAccessTime() : int {
 		return $this->lastAccessTime;
 	}
 
-	public function refill(): void
-	{
-		$ev = new BlockRefillEvent($this->getPreviousBlock(), $this->pos);
+	/**
+	 * Get the restore duration of the block.
+	 */
+	public function getRestoreDuration() : int {
+		return $this->restoreDuration;
+	}
+
+	/**
+	 * Check if the block has been restored.
+	 */
+	public function isRestored() : bool {
+		return $this->isRestored;
+	}
+
+	/**
+	 * Set the restore status of the block.
+	 */
+	public function setRestored(bool $isRestored) : void {
+		$this->isRestored = $isRestored;
+	}
+
+	/**
+	 * Replace the block with the replacement block.
+	 */
+	public function replaceBlock(Player $player) : void {
+		$blockReplacer = BlockReplacer::getInstance();
+
+		if (!$this->isRestored) {
+			return;
+		}
+
+		$this->setLastAccessTime(time());
+
+		$ev = new BlockReplaceEvent($player, $this->getReplacementBlock(), $this->getPosition());
 		$ev->call();
 		if ($ev->isCancelled()) {
 			return;
 		}
+
+		$block = $ev->getBlock();
 		$position = $ev->getPosition();
 		$world = $position->getWorld();
-		$world->setBlock($position, $ev->getBlock());
-		BlockReplacer::getInstance()->getConfiguration()->getParticle()->addTo($world, $position);
-		BlockReplacer::getInstance()->getConfiguration()->getSound()->addTo($world, $position);
-		$this->setRefilled(true);
+
+		$blockReplacer->getScheduler()->scheduleTask(new ClosureTask(static function () use ($block, $position, $world, $blockReplacer) : void {
+			$world->setBlock($position, $block);
+			$blockReplacer->getConfiguration()->getParticle()->addFrom($world, $position);
+			$blockReplacer->getConfiguration()->getSound()->addFrom($world, $position);
+		}));
+
+		$this->setRestored(false);
 	}
 
-	public function isRefilled(): bool
-	{
-		return $this->refilled;
+	/**
+	 * Restore the block with the replaced block.
+	 */
+	public function restoreBlock() : void {
+		$blockReplacer = BlockReplacer::getInstance();
+
+		$ev = new BlockRefillEvent($this->getReplacedBlock(), $this->getPosition());
+		$ev->call();
+		if ($ev->isCancelled()) {
+			return;
+		}
+
+		$block = $ev->getBlock();
+		$position = $ev->getPosition();
+		$world = $position->getWorld();
+
+		$world->setBlock($position, $block);
+		$blockReplacer->getConfiguration()->getParticle()->addTo($world, $position);
+		$blockReplacer->getConfiguration()->getSound()->addTo($world, $position);
+
+		$this->setRestored(true);
 	}
 
-	public function setRefilled(bool $refilled): void
-	{
-		$this->refilled = $refilled;
-	}
+	/**
+	 * Check if the block needs to be restored based on the access time and restore duration.
+	 */
+	public function checkRestoreStatus() : void {
+		$lastAccessTime = $this->getLastAccessTime();
+		$isRestored = $this->isRestored();
 
-	public function check(): void
-	{
-		if ($this->lastAccessTime !== -1 && !$this->refilled) {
-			if (time() - $this->lastAccessTime >= $this->time) {
-				$this->refill();
+		if ($lastAccessTime !== -1 && !$isRestored) {
+			$currentTime = time();
+			$elapsedTime = $currentTime - $lastAccessTime;
+			$time = $this->getRestoreDuration();
+
+			if ($elapsedTime >= $time) {
+				$this->restoreBlock();
 			}
 		}
-	}
-
-	public function getTime(): int
-	{
-		return $this->time;
 	}
 }

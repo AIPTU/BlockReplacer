@@ -23,14 +23,14 @@ use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
 
-final class ConfigurationHelper
-{
+class ConfigurationHelper {
 	/**
 	 * @param array<string, mixed> $data
 	 */
-	public static function read(array &$data, string $key): mixed
-	{
+	public static function read(array &$data, string $key) : mixed {
 		if (!isset($data[$key])) {
 			throw new BadConfigurationException("Cannot find required key '{$key}'");
 		}
@@ -43,8 +43,7 @@ final class ConfigurationHelper
 	/**
 	 * @param array<string, mixed> $data
 	 */
-	public static function readOptional(array &$data, string $key, mixed $fallback): mixed
-	{
+	public static function readOptional(array &$data, string $key, mixed $fallback) : mixed {
 		try {
 			return self::read($data, $key);
 		} catch (BadConfigurationException) {
@@ -55,8 +54,7 @@ final class ConfigurationHelper
 	/**
 	 * @param array<string, mixed> $data
 	 */
-	public static function readInt(array &$data, string $key, int $min = PHP_INT_MIN, int $max = PHP_INT_MAX): int
-	{
+	public static function readInt(array &$data, string $key, int $min = PHP_INT_MIN, int $max = PHP_INT_MAX) : int {
 		$value = self::read($data, $key);
 		if (!is_int($value)) {
 			throw new BadConfigurationException("Expected value of key '{$key}' to be an integer, got " . gettype($value) . (is_scalar($value) ? " ({$value})" : ''));
@@ -72,8 +70,7 @@ final class ConfigurationHelper
 	/**
 	 * @param array<string, mixed> $data
 	 */
-	public static function readNumber(array &$data, string $key): float
-	{
+	public static function readNumber(array &$data, string $key) : float {
 		$value = self::read($data, $key);
 		if (!is_int($value) && !is_float($value)) {
 			throw new BadConfigurationException("Expected value of key '{$key}' to be an number, got " . gettype($value) . (is_scalar($value) ? " ({$value})" : ''));
@@ -85,8 +82,7 @@ final class ConfigurationHelper
 	/**
 	 * @param array<string, mixed> $data
 	 */
-	public static function readBool(array &$data, string $key): bool
-	{
+	public static function readBool(array &$data, string $key) : bool {
 		$value = self::read($data, $key);
 		if (!is_bool($value)) {
 			throw new BadConfigurationException("Expected value of key '{$key}' to be a boolean, got " . gettype($value) . (is_scalar($value) ? " ({$value})" : ''));
@@ -98,8 +94,7 @@ final class ConfigurationHelper
 	/**
 	 * @param array<string, mixed> $data
 	 */
-	public static function readString(array &$data, string $key): string
-	{
+	public static function readString(array &$data, string $key) : string {
 		$value = self::read($data, $key);
 		if (!is_string($value)) {
 			throw new BadConfigurationException("Expected value of key '{$key}' to be a string, got " . gettype($value) . (is_scalar($value) ? " ({$value})" : ''));
@@ -113,8 +108,7 @@ final class ConfigurationHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function readMap(array &$data, string $key): array
-	{
+	public static function readMap(array &$data, string $key) : array {
 		$value = self::read($data, $key);
 		if (!is_array($value)) {
 			throw new BadConfigurationException("Expected value of key '{$key}' to be a map, got " . gettype($value) . (is_scalar($value) ? " ({$value})" : ''));
@@ -126,8 +120,7 @@ final class ConfigurationHelper
 	/**
 	 * @param array<int|string, mixed> $data
 	 */
-	public static function checkForUnread(array $data): void
-	{
+	public static function checkForUnread(array $data) : void {
 		$keys = array_keys($data);
 		if (count($keys) > 0) {
 			throw new BadConfigurationException("Unrecognized keys: '" . implode("', '", $keys) . "'");

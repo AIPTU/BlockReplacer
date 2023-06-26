@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-final class BlockConfiguration
-{
+class BlockConfiguration {
 	public function __construct(
 		private string $default_replace,
 		private int $default_time,
@@ -24,8 +23,7 @@ final class BlockConfiguration
 	/**
 	 * @param array<int|string, mixed> $data
 	 */
-	public static function fromData(array $data): self
-	{
+	public static function fromData(array $data) : self {
 		$instance = new self(
 			ConfigurationHelper::readString($data, 'default-replace'),
 			ConfigurationHelper::readInt($data, 'default-time', 1),
@@ -35,18 +33,15 @@ final class BlockConfiguration
 		return $instance;
 	}
 
-	public function getDefaultReplace(): string
-	{
+	public function getDefaultReplace() : string {
 		return $this->default_replace;
 	}
 
-	public function getDefaultTime(): int
-	{
+	public function getDefaultTime() : int {
 		return $this->default_time;
 	}
 
-	public function getListBlocks(): array
-	{
+	public function getListBlocks() : array {
 		return $this->list_blocks;
 	}
 }
