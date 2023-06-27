@@ -4,32 +4,30 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "diamondstrider1/sounds": "^1.2",
-        "ifera-mc/updatenotifier": "^3",
-        "pocketmine/pocketmine-mp": "^4.18"
+        "pocketmine/pocketmine-mp": "^5.0",
+        "aiptu/sounds": "^1.3",
+        "latampmdevs/update-notifier": "dev-master"
     },
     "require-dev": {
-        "phpstan/extension-installer": "^1.2",
+        "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-strict-rules": "^1.5"
     },
-    "repositories": {
-        "updatenotifier": {
-            "type": "package",
-            "package": {
-                "name": "ifera-mc/updatenotifier",
-                "version": "3.0.0",
-                "source": {
-                    "type": "git",
-                    "url": "https://github.com/ifera-mc/UpdateNotifier",
-                    "reference": "c6c1dfc5b9b5f15badc9e1dcf3b61a3600d0cbe1"
-                }
-            }
+    "autoload": {
+        "psr-4": {
+            "AIPTU\\BlockReplacer\\": "/src"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/LatamPMDevs/UpdateNotifier.git"
+        }
+    ],
     "config": {
         "allow-plugins": {
             "phpstan/extension-installer": true
-        }
+        },
+        "sort-packages": true
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2022 AIPTU
+ * Copyright (c) 2021-2023 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-final class Configuration
-{
+class Configuration {
 	public function __construct(
 		private AutoPickupConfiguration $auto_pickup_configuration,
 		private BlockConfiguration $block_configuration,
@@ -26,8 +25,7 @@ final class Configuration
 	/**
 	 * @param array<int|string, mixed> $data
 	 */
-	public static function fromData(array $data): self
-	{
+	public static function fromData(array $data) : self {
 		$permission_configuration = PermissionConfiguration::fromData(ConfigurationHelper::readMap($data, 'permission'));
 		$auto_pickup_configuration = AutoPickupConfiguration::fromData(ConfigurationHelper::readMap($data, 'auto-pickup'));
 		$block_configuration = BlockConfiguration::fromData(ConfigurationHelper::readMap($data, 'blocks'));
@@ -38,28 +36,23 @@ final class Configuration
 		return new self($auto_pickup_configuration, $block_configuration, $particle_configuration, $sound_configuration, $world_configuration);
 	}
 
-	public function getAutoPickup(): AutoPickupConfiguration
-	{
+	public function getAutoPickup() : AutoPickupConfiguration {
 		return $this->auto_pickup_configuration;
 	}
 
-	public function getBlock(): BlockConfiguration
-	{
+	public function getBlock() : BlockConfiguration {
 		return $this->block_configuration;
 	}
 
-	public function getParticle(): ParticleConfiguration
-	{
+	public function getParticle() : ParticleConfiguration {
 		return $this->particle_configuration;
 	}
 
-	public function getSound(): SoundConfiguration
-	{
+	public function getSound() : SoundConfiguration {
 		return $this->sound_configuration;
 	}
 
-	public function getWorld(): WorldConfiguration
-	{
+	public function getWorld() : WorldConfiguration {
 		return $this->world_configuration;
 	}
 }

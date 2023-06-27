@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2022 AIPTU
+ * Copyright (c) 2021-2023 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -18,30 +18,25 @@ use pocketmine\event\Event;
 use pocketmine\utils\Utils;
 use pocketmine\world\Position;
 
-abstract class BlockEvent extends Event
-{
+abstract class BlockEvent extends Event {
 	public function __construct(
 		protected Block $block,
 		protected Position $position,
 	) {}
 
-	public function getBlock(): Block
-	{
+	public function getBlock() : Block {
 		return $this->block;
 	}
 
-	public function setBlock(Block $block): void
-	{
+	public function setBlock(Block $block) : void {
 		$this->block = $block;
 	}
 
-	public function getPosition(): Position
-	{
+	public function getPosition() : Position {
 		return $this->position;
 	}
 
-	public function setPosition(Position $position): void
-	{
+	public function setPosition(Position $position) : void {
 		if (!$position->isValid()) {
 			throw new \InvalidArgumentException('Spawn position must reference a valid and loaded World');
 		}

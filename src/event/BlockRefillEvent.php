@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2022 AIPTU
+ * Copyright (c) 2021-2023 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -16,23 +16,12 @@ namespace aiptu\blockreplacer\event;
 use pocketmine\block\Block;
 use pocketmine\event\Cancellable;
 use pocketmine\event\CancellableTrait;
-use pocketmine\player\Player;
 use pocketmine\world\Position;
 
-final class BlockReplaceEvent extends BlockEvent implements Cancellable
-{
+class BlockRefillEvent extends BlockEvent implements Cancellable {
 	use CancellableTrait;
 
-	public function __construct(
-		protected Player $player,
-		Block $block,
-		Position $position,
-	) {
+	public function __construct(Block $block, Position $position) {
 		parent::__construct($block, $position);
-	}
-
-	public function getPlayer(): Player
-	{
-		return $this->player;
 	}
 }
