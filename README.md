@@ -8,10 +8,10 @@ A PocketMine-MP plugin that replaces a block with another block at a predetermin
 # Features
 
 - **Automatic Update Checker**: The plugin automatically checks for updates, ensuring that you have the latest version with new features and bug fixes.
-- **Permission Bypass**: Grant specific users the blockreplacer.bypass permission to allow them to bypass block replacement and interact with blocks without triggering the replacement process.
+- **Permission Bypass**: Grant specific users the `blockreplacer.bypass` permission to allow them to bypass block replacement and interact with blocks without triggering the replacement process.
 - **Automatic Item Pickup Support**: Enable automatic pickup of items dropped after block replacement, making it convenient for players to collect them.
 - **Custom Block Replacement**: Define rules for replacing specific blocks, allowing you to create unique environmental transformations and dynamic gameplay scenarios.
-- **Custom Drop Block**: Specify custom blocks to be dropped when certain blocks are broken, adding variety and alternative interactions.
+- **Custom Drop Block**: Specify custom blocks to be dropped when certain blocks are broken, adding variety and alternative interactions. You can even include custom drop experience blocks, providing players with experience orbs upon block destruction.
 - **World Blacklist and Whitelist Support**: Control block replacement in specific worlds using blacklists and whitelists, providing tailored gameplay experiences.
 - **Sound Customization Support**: Customize the sounds associated with block replacement, enhancing immersion and creating a unique audio experience.
 - **Particle Customization Support**: Customize particle effects during block replacement, adding visual flair and enhancing the overall aesthetic appeal.
