@@ -1,4 +1,10 @@
 version = 1
 
 [[analyzers]]
+name = "test-coverage"
+
+[[analyzers]]
 name = "php"
+
+[[transformers]]
+name = "php-cs-fixer"
