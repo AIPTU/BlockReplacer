@@ -17,51 +17,58 @@ use aiptu\sounds\SoundFactory;
 use aiptu\sounds\SoundImpl;
 use pocketmine\math\Vector3;
 use pocketmine\world\World;
+
 use function trim;
 
-class SoundConfiguration {
-	public function __construct(
-		private bool $enabled,
-		private ?SoundImpl $from,
-		private ?SoundImpl $to,
-	) {}
+class SoundConfiguration
+{
+    public function __construct(
+        private bool $enabled,
+        private ?SoundImpl $from,
+        private ?SoundImpl $to,
+    ) {
+    }
 
-	/**
-	 * @param array<int|string, mixed> $data
-	 */
-	public static function fromData(array $data) : self {
-		$volume = ConfigurationHelper::readNumber($data, 'volume');
-		$pitch = ConfigurationHelper::readNumber($data, 'pitch');
-		$from = ConfigurationHelper::readString($data, 'from');
-		$to = ConfigurationHelper::readString($data, 'to');
-		$instance = new self(
-			ConfigurationHelper::readBool($data, 'enabled'),
-			(trim($from) === '') ? null : SoundFactory::create($from, $volume, $pitch),
-			(trim($to) === '') ? null : SoundFactory::create($to, $volume, $pitch),
-		);
-		ConfigurationHelper::checkForUnread($data);
-		return $instance;
-	}
+    /**
+     * @param array<int|string, mixed> $data
+     */
+    public static function fromData(array $data): self
+    {
+        $volume = ConfigurationHelper::readNumber($data, 'volume');
+        $pitch = ConfigurationHelper::readNumber($data, 'pitch');
+        $from = ConfigurationHelper::readString($data, 'from');
+        $to = ConfigurationHelper::readString($data, 'to');
+        $instance = new self(
+            ConfigurationHelper::readBool($data, 'enabled'),
+            (trim($from) === '') ? null : SoundFactory::create($from, $volume, $pitch),
+            (trim($to) === '') ? null : SoundFactory::create($to, $volume, $pitch),
+        );
+        ConfigurationHelper::checkForUnread($data);
+        return $instance;
+    }
 
-	public function addFrom(World $world, Vector3 $position) : void {
-		$sound = $this->from;
-		if ($sound !== null) {
-			$this->add($world, $position, $sound);
-		}
-	}
+    public function addFrom(World $world, Vector3 $position): void
+    {
+        $sound = $this->from;
+        if ($sound !== null) {
+            $this->add($world, $position, $sound);
+        }
+    }
 
-	public function addTo(World $world, Vector3 $position) : void {
-		$sound = $this->to;
-		if ($sound !== null) {
-			$this->add($world, $position, $sound);
-		}
-	}
+    public function addTo(World $world, Vector3 $position): void
+    {
+        $sound = $this->to;
+        if ($sound !== null) {
+            $this->add($world, $position, $sound);
+        }
+    }
 
-	private function add(World $world, Vector3 $position, SoundImpl $sound) : void {
-		if (!$this->enabled) {
-			return;
-		}
+    private function add(World $world, Vector3 $position, SoundImpl $sound): void
+    {
+        if (!$this->enabled) {
+            return;
+        }
 
-		$world->addSound($position, $sound);
-	}
+        $world->addSound($position, $sound);
+    }
 }

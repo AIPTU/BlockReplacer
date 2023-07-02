@@ -19,18 +19,20 @@ use pocketmine\event\CancellableTrait;
 use pocketmine\player\Player;
 use pocketmine\world\Position;
 
-class BlockReplaceEvent extends BlockEvent implements Cancellable {
-	use CancellableTrait;
+class BlockReplaceEvent extends BlockEvent implements Cancellable
+{
+    use CancellableTrait;
 
-	public function __construct(
-		protected Player $player,
-		Block $block,
-		Position $position,
-	) {
-		parent::__construct($block, $position);
-	}
+    public function __construct(
+        protected Player $player,
+        Block $block,
+        Position $position,
+    ) {
+        parent::__construct($block, $position);
+    }
 
-	public function getPlayer() : Player {
-		return $this->player;
-	}
+    public function getPlayer(): Player
+    {
+        return $this->player;
+    }
 }

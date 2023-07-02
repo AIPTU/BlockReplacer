@@ -13,23 +13,27 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-class AutoPickupConfiguration {
-	public function __construct(
-		private bool $enabled_auto_pickup,
-	) {}
+class AutoPickupConfiguration
+{
+    public function __construct(
+        private bool $enabled_auto_pickup,
+    ) {
+    }
 
-	/**
-	 * @param array<int|string, mixed> $data
-	 */
-	public static function fromData(array $data) : self {
-		$instance = new self(
-			ConfigurationHelper::readBool($data, 'enabled'),
-		);
-		ConfigurationHelper::checkForUnread($data);
-		return $instance;
-	}
+    /**
+     * @param array<int|string, mixed> $data
+     */
+    public static function fromData(array $data): self
+    {
+        $instance = new self(
+            ConfigurationHelper::readBool($data, 'enabled'),
+        );
+        ConfigurationHelper::checkForUnread($data);
+        return $instance;
+    }
 
-	public function isAutoPickupEnabled() : bool {
-		return $this->enabled_auto_pickup;
-	}
+    public function isAutoPickupEnabled(): bool
+    {
+        return $this->enabled_auto_pickup;
+    }
 }

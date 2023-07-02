@@ -15,24 +15,27 @@ namespace aiptu\blockreplacer\task;
 
 use aiptu\blockreplacer\data\BlockDataManager;
 use pocketmine\scheduler\Task;
+
 use function time;
 
-class TaskHandler extends Task {
-	public function onRun() : void {
-		$blockDataManager = BlockDataManager::getInstance();
-		$currentTime = time();
+class TaskHandler extends Task
+{
+    public function onRun(): void
+    {
+        $blockDataManager = BlockDataManager::getInstance();
+        $currentTime = time();
 
-		foreach ($blockDataManager->getBlockDataList() as $blockData) {
-			$blockData->checkRestoreStatus();
+        foreach ($blockDataManager->getBlockDataList() as $blockData) {
+            $blockData->checkRestoreStatus();
 
-			if ($blockData->isRestored() && $blockData->getLastAccessTime() !== -1) {
-				$elapsedTime = $currentTime - $blockData->getLastAccessTime();
-				$time = $blockData->getRestoreDuration();
+            if ($blockData->isRestored() && $blockData->getLastAccessTime() !== -1) {
+                $elapsedTime = $currentTime - $blockData->getLastAccessTime();
+                $time = $blockData->getRestoreDuration();
 
-				if ($elapsedTime >= $time) {
-					$blockDataManager->removeBlockData($blockData);
-				}
-			}
-		}
-	}
+                if ($elapsedTime >= $time) {
+                    $blockDataManager->removeBlockData($blockData);
+                }
+            }
+        }
+    }
 }

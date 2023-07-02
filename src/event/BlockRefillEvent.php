@@ -18,10 +18,12 @@ use pocketmine\event\Cancellable;
 use pocketmine\event\CancellableTrait;
 use pocketmine\world\Position;
 
-class BlockRefillEvent extends BlockEvent implements Cancellable {
-	use CancellableTrait;
+class BlockRefillEvent extends BlockEvent implements Cancellable
+{
+    use CancellableTrait;
 
-	public function __construct(Block $block, Position $position) {
-		parent::__construct($block, $position);
-	}
+    public function __construct(Block $block, Position $position)
+    {
+        parent::__construct($block, $position);
+    }
 }

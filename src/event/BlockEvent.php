@@ -18,29 +18,35 @@ use pocketmine\event\Event;
 use pocketmine\utils\Utils;
 use pocketmine\world\Position;
 
-abstract class BlockEvent extends Event {
-	public function __construct(
-		protected Block $block,
-		protected Position $position,
-	) {}
+abstract class BlockEvent extends Event
+{
+    public function __construct(
+        protected Block $block,
+        protected Position $position,
+    ) {
+    }
 
-	public function getBlock() : Block {
-		return $this->block;
-	}
+    public function getBlock(): Block
+    {
+        return $this->block;
+    }
 
-	public function setBlock(Block $block) : void {
-		$this->block = $block;
-	}
+    public function setBlock(Block $block): void
+    {
+        $this->block = $block;
+    }
 
-	public function getPosition() : Position {
-		return $this->position;
-	}
+    public function getPosition(): Position
+    {
+        return $this->position;
+    }
 
-	public function setPosition(Position $position) : void {
-		if (!$position->isValid()) {
-			throw new \InvalidArgumentException('Spawn position must reference a valid and loaded World');
-		}
-		Utils::checkVector3NotInfOrNaN($position);
-		$this->position = $position;
-	}
+    public function setPosition(Position $position): void
+    {
+        if (!$position->isValid()) {
+            throw new \InvalidArgumentException('Spawn position must reference a valid and loaded World');
+        }
+        Utils::checkVector3NotInfOrNaN($position);
+        $this->position = $position;
+    }
 }

@@ -13,35 +13,41 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-class BlockConfiguration {
-	public function __construct(
-		private string $default_replace,
-		private int $default_time,
-		private array $list_blocks,
-	) {}
+class BlockConfiguration
+{
+    public function __construct(
+        private string $default_replace,
+        private int $default_time,
+        private array $list_blocks,
+    ) {
+    }
 
-	/**
-	 * @param array<int|string, mixed> $data
-	 */
-	public static function fromData(array $data) : self {
-		$instance = new self(
-			ConfigurationHelper::readString($data, 'default-replace'),
-			ConfigurationHelper::readInt($data, 'default-time', 1),
-			ConfigurationHelper::readMap($data, 'list'),
-		);
-		ConfigurationHelper::checkForUnread($data);
-		return $instance;
-	}
+    /**
+     * @param array<int|string, mixed> $data
+     */
+    public static function fromData(array $data): self
+    {
+        $instance = new self(
+            ConfigurationHelper::readString($data, 'default-replace'),
+            ConfigurationHelper::readInt($data, 'default-time', 1),
+            ConfigurationHelper::readMap($data, 'list'),
+        );
+        ConfigurationHelper::checkForUnread($data);
+        return $instance;
+    }
 
-	public function getDefaultReplace() : string {
-		return $this->default_replace;
-	}
+    public function getDefaultReplace(): string
+    {
+        return $this->default_replace;
+    }
 
-	public function getDefaultTime() : int {
-		return $this->default_time;
-	}
+    public function getDefaultTime(): int
+    {
+        return $this->default_time;
+    }
 
-	public function getListBlocks() : array {
-		return $this->list_blocks;
-	}
+    public function getListBlocks(): array
+    {
+        return $this->list_blocks;
+    }
 }

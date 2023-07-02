@@ -13,4 +13,6 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-class BadConfigurationException extends \RuntimeException {}
+class BadConfigurationException extends \RuntimeException
+{
+}
