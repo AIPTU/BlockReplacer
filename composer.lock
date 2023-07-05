@@ -290,16 +290,16 @@
         },
         {
             "name": "pocketmine/bedrock-block-upgrade-schema",
-            "version": "2.2.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockBlockUpgradeSchema.git",
-                "reference": "79bb3ad542ef19e828fdf1fa6adc54f1fa4b3bb5"
+                "reference": "8b72c47109e174ac7f17c3ac546748f8e49a5fdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockBlockUpgradeSchema/zipball/79bb3ad542ef19e828fdf1fa6adc54f1fa4b3bb5",
-                "reference": "79bb3ad542ef19e828fdf1fa6adc54f1fa4b3bb5",
+                "url": "https://api.github.com/repos/pmmp/BedrockBlockUpgradeSchema/zipball/8b72c47109e174ac7f17c3ac546748f8e49a5fdf",
+                "reference": "8b72c47109e174ac7f17c3ac546748f8e49a5fdf",
                 "shasum": ""
             },
             "type": "library",
@@ -310,9 +310,9 @@
             "description": "Schemas describing how to upgrade saved block data in older Minecraft: Bedrock Edition world saves",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockBlockUpgradeSchema/issues",
-                "source": "https://github.com/pmmp/BedrockBlockUpgradeSchema/tree/2.2.0"
+                "source": "https://github.com/pmmp/BedrockBlockUpgradeSchema/tree/3.0.0"
             },
-            "time": "2023-05-04T21:49:36+00:00"
+            "time": "2023-07-03T16:35:44+00:00"
         },
         {
             "name": "pocketmine/bedrock-data",
@@ -785,16 +785,16 @@
         },
         {
             "name": "pocketmine/pocketmine-mp",
-            "version": "5.1.3",
+            "version": "5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/PocketMine-MP.git",
-                "reference": "2278275505a7f9d768027673e699e6199575c8bc"
+                "reference": "e6de9a70a211e1c2f4472dc2c4a0155ba0ffa5b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/2278275505a7f9d768027673e699e6199575c8bc",
-                "reference": "2278275505a7f9d768027673e699e6199575c8bc",
+                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/e6de9a70a211e1c2f4472dc2c4a0155ba0ffa5b2",
+                "reference": "e6de9a70a211e1c2f4472dc2c4a0155ba0ffa5b2",
                 "shasum": ""
             },
             "require": {
@@ -815,7 +815,7 @@
                 "ext-openssl": "*",
                 "ext-pcre": "*",
                 "ext-phar": "*",
-                "ext-pmmpthread": "^6.0.1",
+                "ext-pmmpthread": "^6.0.4",
                 "ext-reflection": "*",
                 "ext-simplexml": "*",
                 "ext-sockets": "*",
@@ -826,7 +826,7 @@
                 "fgrosse/phpasn1": "~2.5.0",
                 "php": "^8.1",
                 "php-64bit": "*",
-                "pocketmine/bedrock-block-upgrade-schema": "~2.2.0+bedrock-1.20.0",
+                "pocketmine/bedrock-block-upgrade-schema": "~3.0.0",
                 "pocketmine/bedrock-data": "~2.3.0+bedrock-1.20.0",
                 "pocketmine/bedrock-item-upgrade-schema": "~1.3.0+bedrock-1.20.0",
                 "pocketmine/bedrock-protocol": "~22.0.0+bedrock-1.20.0",
@@ -868,7 +868,7 @@
             "homepage": "https://pmmp.io",
             "support": {
                 "issues": "https://github.com/pmmp/PocketMine-MP/issues",
-                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.1.3"
+                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.2.0"
             },
             "funding": [
                 {
@@ -880,7 +880,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-07-01T11:18:10+00:00"
+            "time": "2023-07-04T14:58:09+00:00"
         },
         {
             "name": "pocketmine/raklib",
