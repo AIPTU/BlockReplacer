@@ -731,16 +731,16 @@
         },
         {
             "name": "pocketmine/netresearch-jsonmapper",
-            "version": "v4.2.999",
+            "version": "v4.2.1000",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/netresearch-jsonmapper.git",
-                "reference": "f700806dec756ed825a8200dc2950ead98265956"
+                "reference": "078764e869e9b732f97206ec9363480a77c35532"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/netresearch-jsonmapper/zipball/f700806dec756ed825a8200dc2950ead98265956",
-                "reference": "f700806dec756ed825a8200dc2950ead98265956",
+                "url": "https://api.github.com/repos/pmmp/netresearch-jsonmapper/zipball/078764e869e9b732f97206ec9363480a77c35532",
+                "reference": "078764e869e9b732f97206ec9363480a77c35532",
                 "shasum": ""
             },
             "require": {
@@ -779,22 +779,22 @@
             "support": {
                 "email": "cweiske@cweiske.de",
                 "issues": "https://github.com/cweiske/jsonmapper/issues",
-                "source": "https://github.com/pmmp/netresearch-jsonmapper/tree/v4.2.999"
+                "source": "https://github.com/pmmp/netresearch-jsonmapper/tree/v4.2.1000"
             },
-            "time": "2023-06-01T13:43:01+00:00"
+            "time": "2023-07-14T10:44:14+00:00"
         },
         {
             "name": "pocketmine/pocketmine-mp",
-            "version": "5.3.0",
+            "version": "5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/PocketMine-MP.git",
-                "reference": "d630b3af7bbdd5754dedd1ca4dd6e486fd3012ef"
+                "reference": "250d18e41bb6fc671cbd2e3d2daaee2e06770b0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/d630b3af7bbdd5754dedd1ca4dd6e486fd3012ef",
-                "reference": "d630b3af7bbdd5754dedd1ca4dd6e486fd3012ef",
+                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/250d18e41bb6fc671cbd2e3d2daaee2e06770b0f",
+                "reference": "250d18e41bb6fc671cbd2e3d2daaee2e06770b0f",
                 "shasum": ""
             },
             "require": {
@@ -838,7 +838,7 @@
                 "pocketmine/log": "^0.4.0",
                 "pocketmine/math": "^0.4.0",
                 "pocketmine/nbt": "^0.3.2",
-                "pocketmine/netresearch-jsonmapper": "~v4.2.999",
+                "pocketmine/netresearch-jsonmapper": "~v4.2.1000",
                 "pocketmine/raklib": "^0.15.0",
                 "pocketmine/raklib-ipc": "^0.2.0",
                 "pocketmine/snooze": "^0.5.0",
@@ -868,7 +868,7 @@
             "homepage": "https://pmmp.io",
             "support": {
                 "issues": "https://github.com/pmmp/PocketMine-MP/issues",
-                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.3.0"
+                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.3.1"
             },
             "funding": [
                 {
@@ -880,7 +880,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-07-12T13:07:58+00:00"
+            "time": "2023-07-14T12:08:57+00:00"
         },
         {
             "name": "pocketmine/raklib",
