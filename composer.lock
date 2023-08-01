@@ -160,82 +160,6 @@
             "time": "2023-01-15T23:15:59+00:00"
         },
         {
-            "name": "fgrosse/phpasn1",
-            "version": "v2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fgrosse/PHPASN1.git",
-                "reference": "42060ed45344789fb9f21f9f1864fc47b9e3507b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fgrosse/PHPASN1/zipball/42060ed45344789fb9f21f9f1864fc47b9e3507b",
-                "reference": "42060ed45344789fb9f21f9f1864fc47b9e3507b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1 || ^8.0"
-            },
-            "require-dev": {
-                "php-coveralls/php-coveralls": "~2.0",
-                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
-            },
-            "suggest": {
-                "ext-bcmath": "BCmath is the fallback extension for big integer calculations",
-                "ext-curl": "For loading OID information from the web if they have not bee defined statically",
-                "ext-gmp": "GMP is the preferred extension for big integer calculations",
-                "phpseclib/bcmath_compat": "BCmath polyfill for servers where neither GMP nor BCmath is available"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "FG\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Friedrich Große",
-                    "email": "friedrich.grosse@gmail.com",
-                    "homepage": "https://github.com/FGrosse",
-                    "role": "Author"
-                },
-                {
-                    "name": "All contributors",
-                    "homepage": "https://github.com/FGrosse/PHPASN1/contributors"
-                }
-            ],
-            "description": "A PHP Framework that allows you to encode and decode arbitrary ASN.1 structures using the ITU-T X.690 Encoding Rules.",
-            "homepage": "https://github.com/FGrosse/PHPASN1",
-            "keywords": [
-                "DER",
-                "asn.1",
-                "asn1",
-                "ber",
-                "binary",
-                "decoding",
-                "encoding",
-                "x.509",
-                "x.690",
-                "x509",
-                "x690"
-            ],
-            "support": {
-                "issues": "https://github.com/fgrosse/PHPASN1/issues",
-                "source": "https://github.com/fgrosse/PHPASN1/tree/v2.5.0"
-            },
-            "abandoned": true,
-            "time": "2022-12-19T11:08:26+00:00"
-        },
-        {
             "name": "latampmdevs/update-notifier",
             "version": "dev-master",
             "source": {
@@ -368,16 +292,16 @@
         },
         {
             "name": "pocketmine/bedrock-protocol",
-            "version": "23.0.0+bedrock-1.20.10",
+            "version": "23.0.2+bedrock-1.20.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockProtocol.git",
-                "reference": "0cfaafdc02cca882a50773d6c02ebfeb622614e2"
+                "reference": "69a309a2dd7dcf3ec8c316385b866397e8c2cbfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/0cfaafdc02cca882a50773d6c02ebfeb622614e2",
-                "reference": "0cfaafdc02cca882a50773d6c02ebfeb622614e2",
+                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/69a309a2dd7dcf3ec8c316385b866397e8c2cbfd",
+                "reference": "69a309a2dd7dcf3ec8c316385b866397e8c2cbfd",
                 "shasum": ""
             },
             "require": {
@@ -409,9 +333,9 @@
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockProtocol/issues",
-                "source": "https://github.com/pmmp/BedrockProtocol/tree/23.0.0+bedrock-1.20.10"
+                "source": "https://github.com/pmmp/BedrockProtocol/tree/23.0.2+bedrock-1.20.10"
             },
-            "time": "2023-07-12T12:19:40+00:00"
+            "time": "2023-07-24T15:35:36+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
@@ -785,16 +709,16 @@
         },
         {
             "name": "pocketmine/pocketmine-mp",
-            "version": "5.3.1",
+            "version": "5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/PocketMine-MP.git",
-                "reference": "250d18e41bb6fc671cbd2e3d2daaee2e06770b0f"
+                "reference": "01664d2e81eadb65a076fb665ba7c67cbd8e90a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/250d18e41bb6fc671cbd2e3d2daaee2e06770b0f",
-                "reference": "250d18e41bb6fc671cbd2e3d2daaee2e06770b0f",
+                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/01664d2e81eadb65a076fb665ba7c67cbd8e90a9",
+                "reference": "01664d2e81eadb65a076fb665ba7c67cbd8e90a9",
                 "shasum": ""
             },
             "require": {
@@ -823,13 +747,12 @@
                 "ext-yaml": ">=2.0.0",
                 "ext-zip": "*",
                 "ext-zlib": ">=1.2.11",
-                "fgrosse/phpasn1": "~2.5.0",
                 "php": "^8.1",
                 "php-64bit": "*",
                 "pocketmine/bedrock-block-upgrade-schema": "~3.1.0+bedrock-1.20.10",
                 "pocketmine/bedrock-data": "~2.4.0+bedrock-1.20.10",
                 "pocketmine/bedrock-item-upgrade-schema": "~1.4.0+bedrock-1.20.10",
-                "pocketmine/bedrock-protocol": "~23.0.0+bedrock-1.20.10",
+                "pocketmine/bedrock-protocol": "~23.0.2+bedrock-1.20.10",
                 "pocketmine/binaryutils": "^0.2.1",
                 "pocketmine/callback-validator": "^1.0.2",
                 "pocketmine/color": "^0.3.0",
@@ -843,7 +766,7 @@
                 "pocketmine/raklib-ipc": "^0.2.0",
                 "pocketmine/snooze": "^0.5.0",
                 "ramsey/uuid": "~4.7.0",
-                "symfony/filesystem": "~6.2.0"
+                "symfony/filesystem": "~6.3.0"
             },
             "require-dev": {
                 "phpstan/phpstan": "1.10.16",
@@ -868,7 +791,7 @@
             "homepage": "https://pmmp.io",
             "support": {
                 "issues": "https://github.com/pmmp/PocketMine-MP/issues",
-                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.3.1"
+                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.4.0"
             },
             "funding": [
                 {
@@ -880,7 +803,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-07-14T12:08:57+00:00"
+            "time": "2023-08-01T11:46:53+00:00"
         },
         {
             "name": "pocketmine/raklib",
@@ -1189,16 +1112,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v6.2.12",
+            "version": "v6.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "b0818e7203e53540f2a5c9a5017d97897df1e9bb"
+                "reference": "edd36776956f2a6fcf577edb5b05eb0e3bdc52ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/b0818e7203e53540f2a5c9a5017d97897df1e9bb",
-                "reference": "b0818e7203e53540f2a5c9a5017d97897df1e9bb",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/edd36776956f2a6fcf577edb5b05eb0e3bdc52ae",
+                "reference": "edd36776956f2a6fcf577edb5b05eb0e3bdc52ae",
                 "shasum": ""
             },
             "require": {
@@ -1232,7 +1155,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v6.2.12"
+                "source": "https://github.com/symfony/filesystem/tree/v6.3.1"
             },
             "funding": [
                 {
@@ -1248,7 +1171,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-01T08:29:37+00:00"
+            "time": "2023-06-01T08:30:39+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
