@@ -1,5 +1,18 @@
 {
-   "extends": [
-      "config:base"
-   ]
+  "extends": [
+    "config:recommended",
+    ":disableDependencyDashboard"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "automerge": true
+    }
+  ],
+  "automergeStrategy": "squash"
 }
