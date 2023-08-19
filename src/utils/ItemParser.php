@@ -18,6 +18,8 @@ use DaPigGuy\PiggyCustomEnchants\enchants\CustomEnchant;
 use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
 use DaPigGuy\PiggyCustomEnchants\utils\Utils as PiggyUtils;
 use pocketmine\block\Block;
+use pocketmine\block\Crops;
+use pocketmine\block\Flowable;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\inventory\ArmorInventory;
 use pocketmine\item\Armor;
@@ -31,7 +33,7 @@ use pocketmine\item\FishingRod;
 use pocketmine\item\FlintSteel;
 use pocketmine\item\Hoe;
 use pocketmine\item\Item;
-use pocketmine\item\ItemBlock;
+use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\Pickaxe;
 use pocketmine\item\Shears;
 use pocketmine\item\Shovel;
@@ -41,7 +43,9 @@ use pocketmine\item\VanillaItems;
 use pocketmine\utils\TextFormat;
 use function array_map;
 use function class_exists;
+use function explode;
 use function is_array;
+use function str_contains;
 
 class ItemParser {
 	/**
@@ -101,10 +105,10 @@ class ItemParser {
 	 *
 	 * @param string $itemString the string representation of the item
 	 *
-	 * @return null|Item the parsed item, or null if parsing fails
+	 * @return Item|null the parsed item, or null if parsing fails
 	 */
 	public static function parseItemFromString(string $itemString) : ?Item {
-		return StringToItemParser::getInstance()->parse($itemString);
+		return StringToItemParser::getInstance()->parse($itemString) ?? LegacyStringToItemParser::getInstance()->parse($itemString);
 	}
 
 	/**
@@ -115,13 +119,26 @@ class ItemParser {
 	 * @return Block the parsed block, or a default Block object if parsing fails
 	 */
 	public static function parseBlock(string $blockString) : Block {
-		$parsedBlock = self::parseItemFromString($blockString);
-
-		if ($parsedBlock instanceof ItemBlock) {
-			return $parsedBlock->getBlock();
+		$parsedItem = self::parseItemFromString($blockString);
+		if ($parsedItem === null) {
+			return VanillaBlocks::AIR(); // Return a default Block object if parsing fails
 		}
 
-		return VanillaBlocks::AIR(); // Return a default Block object if parsing fails
+		$parsedBlock = $parsedItem->getBlock();
+
+		// Check if the block string has the format "string:id"
+		if (str_contains($blockString, ':')) {
+			[$blockName, $blockId] = explode(':', $blockString);
+
+			// Check if the parsed block is either an instance of Crops or Flowable
+			if ($parsedBlock instanceof Crops || $parsedBlock instanceof Flowable) {
+				$newAge = (int) $blockId;
+				/** @phpstan-ignore-next-line */
+				$parsedBlock->setAge($newAge);
+			}
+		}
+
+		return $parsedBlock;
 	}
 
 	/**
@@ -196,7 +213,7 @@ class ItemParser {
 	 *
 	 * @param Item $item the item to retrieve the item flags for
 	 *
-	 * @return null|int the item flags for the item, or null if the item is not supported
+	 * @return int|null the item flags for the item, or null if the item is not supported
 	 */
 	private static function getItemFlagsByItem(Item $item) : ?int {
 		if ($item instanceof Armor) {
