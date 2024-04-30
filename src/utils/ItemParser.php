@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2023 AIPTU
+ * Copyright (c) 2021-2024 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -21,24 +21,13 @@ use pocketmine\block\Block;
 use pocketmine\block\Crops;
 use pocketmine\block\Flowable;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\inventory\ArmorInventory;
-use pocketmine\item\Armor;
-use pocketmine\item\Axe;
-use pocketmine\item\Bow;
+use pocketmine\item\enchantment\AvailableEnchantmentRegistry;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
-use pocketmine\item\enchantment\ItemFlags;
 use pocketmine\item\enchantment\StringToEnchantmentParser;
-use pocketmine\item\FishingRod;
-use pocketmine\item\FlintSteel;
-use pocketmine\item\Hoe;
 use pocketmine\item\Item;
 use pocketmine\item\LegacyStringToItemParser;
-use pocketmine\item\Pickaxe;
-use pocketmine\item\Shears;
-use pocketmine\item\Shovel;
 use pocketmine\item\StringToItemParser;
-use pocketmine\item\Sword;
 use pocketmine\item\VanillaItems;
 use pocketmine\utils\TextFormat;
 use function array_map;
@@ -187,12 +176,7 @@ class ItemParser {
 			return PiggyUtils::itemMatchesItemType($item, $enchantment->getItemType()) && self::isEnchantmentLevelValid($enchantment, $level);
 		}
 
-		$itemFlags = self::getItemFlagsByItem($item);
-		if ($itemFlags === null || !($enchantment->hasPrimaryItemType($itemFlags) || $enchantment->hasSecondaryItemType($itemFlags))) {
-			return false;
-		}
-
-		return self::isEnchantmentLevelValid($enchantment, $level);
+		return AvailableEnchantmentRegistry::getInstance()->isAvailableForItem($enchantment, $item) && self::isEnchantmentLevelValid($enchantment, $level);
 	}
 
 	/**
@@ -205,48 +189,11 @@ class ItemParser {
 	 */
 	private static function isEnchantmentLevelValid(Enchantment $enchantment, int $level) : bool {
 		$maxLevel = $enchantment->getMaxLevel();
-		return $level >= 1 && ($maxLevel === -1 || $level <= $maxLevel);
-	}
-
-	/**
-	 * Retrieves the item flags associated with the given item.
-	 *
-	 * @param Item $item the item to retrieve the item flags for
-	 *
-	 * @return int|null the item flags for the item, or null if the item is not supported
-	 */
-	private static function getItemFlagsByItem(Item $item) : ?int {
-		if ($item instanceof Armor) {
-			$slot = $item->getArmorSlot();
-			$slotFlags = [
-				ArmorInventory::SLOT_HEAD => ItemFlags::HEAD,
-				ArmorInventory::SLOT_CHEST => ItemFlags::TORSO,
-				ArmorInventory::SLOT_LEGS => ItemFlags::LEGS,
-				ArmorInventory::SLOT_FEET => ItemFlags::FEET,
-			];
-
-			return $slotFlags[$slot] ?? null;
+		if ($level > $maxLevel) {
+			return false;
 		}
 
-		$itemFlags = [
-			Sword::class => ItemFlags::SWORD,
-			Bow::class => ItemFlags::BOW,
-			Hoe::class => ItemFlags::HOE,
-			Shears::class => ItemFlags::SHEARS,
-			FlintSteel::class => ItemFlags::FLINT_AND_STEEL,
-			Axe::class => ItemFlags::AXE,
-			Pickaxe::class => ItemFlags::PICKAXE,
-			Shovel::class => ItemFlags::SHOVEL,
-			FishingRod::class => ItemFlags::FISHING_ROD,
-		];
-
-		foreach ($itemFlags as $class => $flags) {
-			if ($item instanceof $class) {
-				return $flags;
-			}
-		}
-
-		return null;
+		return !($level < 1);
 	}
 
 	/**

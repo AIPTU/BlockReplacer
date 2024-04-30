@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2023 AIPTU
+ * Copyright (c) 2021-2024 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -54,6 +54,7 @@ class EventHandler implements Listener {
 					$blockData = new BlockData($position, $previousBlock, $nextBlock, $time);
 					$blockDataManager->addBlockData($blockData);
 				}
+
 				$blockData->replaceBlock($player);
 
 				if (isset($v['drops'])) {
@@ -117,6 +118,7 @@ class EventHandler implements Listener {
 				$result[] = $item;
 			}
 		}
+
 		return $result;
 	}
 
@@ -124,6 +126,7 @@ class EventHandler implements Listener {
 		if (isset($experience['amount'], $experience['chance']) && Utils::checkChance($experience['chance'])) {
 			return Utils::parseAmount($experience['amount']);
 		}
+
 		return 0;
 	}
 }
