@@ -1,7 +1,7 @@
 name: BlockReplacer
 main: aiptu\blockreplacer\BlockReplacer
 src-namespace-prefix: aiptu\blockreplacer
-version: 3.0.1
+version: 3.0.2
 api: [5.5.0]
 author: AIPTU
 softdepend:
