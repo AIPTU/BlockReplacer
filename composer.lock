@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b9ef199cc4253bf0c2b4499c165e022",
+    "content-hash": "727a5d57d1654b9b45537b39b31b206e",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -66,17 +66,17 @@
             "time": "2022-10-02T11:22:07+00:00"
         },
         {
-            "name": "aiptu/sounds",
-            "version": "v1.4.0",
+            "name": "aiptu/libsounds",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/AIPTU/Sounds.git",
-                "reference": "a39798b4eb6ad5cd5db13f32b724429bfd175038"
+                "url": "https://github.com/AIPTU/libsounds.git",
+                "reference": "48fa9777aecc98ff17fb0f157f59a6e1264fb0b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AIPTU/Sounds/zipball/a39798b4eb6ad5cd5db13f32b724429bfd175038",
-                "reference": "a39798b4eb6ad5cd5db13f32b724429bfd175038",
+                "url": "https://api.github.com/repos/AIPTU/libsounds/zipball/48fa9777aecc98ff17fb0f157f59a6e1264fb0b9",
+                "reference": "48fa9777aecc98ff17fb0f157f59a6e1264fb0b9",
                 "shasum": ""
             },
             "require": {
@@ -85,25 +85,25 @@
             "type": "library",
             "extra": {
                 "virion": {
-                    "spec": "3.0",
-                    "namespace-root": "aiptu\\sounds"
+                    "namespace-root": "aiptu\\libsounds",
+                    "spec": "3.0"
                 }
             },
             "autoload": {
-                "classmap": [
-                    "src"
-                ]
+                "psr-4": {
+                    "aiptu\\libsounds\\": "/src/aiptu/libsounds"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "A library for managing and manipulating sound files in PHP.",
+            "description": "A PocketMine-MP library for managing Minecraft Bedrock Edition sounds.",
             "support": {
-                "issues": "https://github.com/AIPTU/Sounds/issues",
-                "source": "https://github.com/AIPTU/Sounds/tree/v1.4.0"
+                "issues": "https://github.com/AIPTU/libsounds/issues",
+                "source": "https://github.com/AIPTU/libsounds/tree/v1.0.0"
             },
-            "time": "2024-04-29T16:02:24+00:00"
+            "time": "2024-06-04T14:38:45+00:00"
         },
         {
             "name": "brick/math",

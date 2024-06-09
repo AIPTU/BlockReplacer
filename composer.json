@@ -4,7 +4,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "aiptu/sounds": "^1.3",
+        "aiptu/libsounds": "^1.0",
         "ifera-mc/update-notifier": "dev-master",
         "pocketmine/pocketmine-mp": "^5.15"
     },
