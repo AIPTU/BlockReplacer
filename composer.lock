@@ -220,16 +220,16 @@
         },
         {
             "name": "pocketmine/bedrock-block-upgrade-schema",
-            "version": "4.1.0",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockBlockUpgradeSchema.git",
-                "reference": "d6b10cb0a5e69fb1dfe3b7f493bf4f519723a9cb"
+                "reference": "8a327197b3b462fa282f40f76b070ffe585a25d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockBlockUpgradeSchema/zipball/d6b10cb0a5e69fb1dfe3b7f493bf4f519723a9cb",
-                "reference": "d6b10cb0a5e69fb1dfe3b7f493bf4f519723a9cb",
+                "url": "https://api.github.com/repos/pmmp/BedrockBlockUpgradeSchema/zipball/8a327197b3b462fa282f40f76b070ffe585a25d2",
+                "reference": "8a327197b3b462fa282f40f76b070ffe585a25d2",
                 "shasum": ""
             },
             "type": "library",
@@ -240,22 +240,22 @@
             "description": "Schemas describing how to upgrade saved block data in older Minecraft: Bedrock Edition world saves",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockBlockUpgradeSchema/issues",
-                "source": "https://github.com/pmmp/BedrockBlockUpgradeSchema/tree/4.1.0"
+                "source": "https://github.com/pmmp/BedrockBlockUpgradeSchema/tree/4.2.0"
             },
-            "time": "2024-04-05T17:28:14+00:00"
+            "time": "2024-06-13T17:28:26+00:00"
         },
         {
             "name": "pocketmine/bedrock-data",
-            "version": "2.10.0+bedrock-1.20.80",
+            "version": "2.11.0+bedrock-1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockData.git",
-                "reference": "d7d709fec3848f56ca77f5ff0e5d4741b59f9d69"
+                "reference": "cae40bde98081b388c4d3ab59d45b8d1cf5d8761"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/d7d709fec3848f56ca77f5ff0e5d4741b59f9d69",
-                "reference": "d7d709fec3848f56ca77f5ff0e5d4741b59f9d69",
+                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/cae40bde98081b388c4d3ab59d45b8d1cf5d8761",
+                "reference": "cae40bde98081b388c4d3ab59d45b8d1cf5d8761",
                 "shasum": ""
             },
             "type": "library",
@@ -266,22 +266,22 @@
             "description": "Blobs of data generated from Minecraft: Bedrock Edition, used by PocketMine-MP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockData/issues",
-                "source": "https://github.com/pmmp/BedrockData/tree/bedrock-1.20.80"
+                "source": "https://github.com/pmmp/BedrockData/tree/bedrock-1.21.0"
             },
-            "time": "2024-04-25T10:08:23+00:00"
+            "time": "2024-06-13T17:17:55+00:00"
         },
         {
             "name": "pocketmine/bedrock-item-upgrade-schema",
-            "version": "1.9.0",
+            "version": "1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockItemUpgradeSchema.git",
-                "reference": "24a89457c17c271b5378b195931e720873865a79"
+                "reference": "b4687afa19f91eacebd46c40d487f4cc515be504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockItemUpgradeSchema/zipball/24a89457c17c271b5378b195931e720873865a79",
-                "reference": "24a89457c17c271b5378b195931e720873865a79",
+                "url": "https://api.github.com/repos/pmmp/BedrockItemUpgradeSchema/zipball/b4687afa19f91eacebd46c40d487f4cc515be504",
+                "reference": "b4687afa19f91eacebd46c40d487f4cc515be504",
                 "shasum": ""
             },
             "type": "library",
@@ -292,22 +292,22 @@
             "description": "JSON schemas for upgrading items found in older Minecraft: Bedrock world saves",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockItemUpgradeSchema/issues",
-                "source": "https://github.com/pmmp/BedrockItemUpgradeSchema/tree/1.9.0"
+                "source": "https://github.com/pmmp/BedrockItemUpgradeSchema/tree/1.10.0"
             },
-            "time": "2024-04-05T18:46:07+00:00"
+            "time": "2024-05-15T15:15:55+00:00"
         },
         {
             "name": "pocketmine/bedrock-protocol",
-            "version": "30.0.0+bedrock-1.20.80",
+            "version": "31.0.0+bedrock-1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockProtocol.git",
-                "reference": "dc7606a9f778eeeeccfae393bd58e0b62ec6f85a"
+                "reference": "972373b6b8068963649f0a95163424eb5b645e29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/dc7606a9f778eeeeccfae393bd58e0b62ec6f85a",
-                "reference": "dc7606a9f778eeeeccfae393bd58e0b62ec6f85a",
+                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/972373b6b8068963649f0a95163424eb5b645e29",
+                "reference": "972373b6b8068963649f0a95163424eb5b645e29",
                 "shasum": ""
             },
             "require": {
@@ -320,7 +320,7 @@
                 "ramsey/uuid": "^4.1"
             },
             "require-dev": {
-                "phpstan/phpstan": "1.10.59",
+                "phpstan/phpstan": "1.11.2",
                 "phpstan/phpstan-phpunit": "^1.0.0",
                 "phpstan/phpstan-strict-rules": "^1.0.0",
                 "phpunit/phpunit": "^9.5 || ^10.0"
@@ -338,9 +338,9 @@
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockProtocol/issues",
-                "source": "https://github.com/pmmp/BedrockProtocol/tree/30.0.0+bedrock-1.20.80"
+                "source": "https://github.com/pmmp/BedrockProtocol/tree/31.0.0+bedrock-1.21.0"
             },
-            "time": "2024-04-05T17:53:35+00:00"
+            "time": "2024-06-13T17:34:14+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
@@ -714,16 +714,16 @@
         },
         {
             "name": "pocketmine/pocketmine-mp",
-            "version": "5.15.0",
+            "version": "5.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/PocketMine-MP.git",
-                "reference": "d273ccf87ca2e7ac52b4c6091576336930720edc"
+                "reference": "22a1549998ef0e4668ed48838900ad84258fe04a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/d273ccf87ca2e7ac52b4c6091576336930720edc",
-                "reference": "d273ccf87ca2e7ac52b4c6091576336930720edc",
+                "url": "https://api.github.com/repos/pmmp/PocketMine-MP/zipball/22a1549998ef0e4668ed48838900ad84258fe04a",
+                "reference": "22a1549998ef0e4668ed48838900ad84258fe04a",
                 "shasum": ""
             },
             "require": {
@@ -754,10 +754,10 @@
                 "ext-zlib": ">=1.2.11",
                 "php": "^8.1",
                 "php-64bit": "*",
-                "pocketmine/bedrock-block-upgrade-schema": "~4.1.0+bedrock-1.20.80",
-                "pocketmine/bedrock-data": "~2.10.0+bedrock-1.20.80",
-                "pocketmine/bedrock-item-upgrade-schema": "~1.9.0+bedrock-1.20.80",
-                "pocketmine/bedrock-protocol": "~30.0.0+bedrock-1.20.80",
+                "pocketmine/bedrock-block-upgrade-schema": "~4.2.0+bedrock-1.21.0",
+                "pocketmine/bedrock-data": "~2.11.0+bedrock-1.21.0",
+                "pocketmine/bedrock-item-upgrade-schema": "~1.10.0+bedrock-1.21.0",
+                "pocketmine/bedrock-protocol": "~31.0.0+bedrock-1.21.0",
                 "pocketmine/binaryutils": "^0.2.1",
                 "pocketmine/callback-validator": "^1.0.2",
                 "pocketmine/color": "^0.3.0",
@@ -774,7 +774,7 @@
                 "symfony/filesystem": "~6.4.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "1.10.66",
+                "phpstan/phpstan": "1.11.2",
                 "phpstan/phpstan-phpunit": "^1.1.0",
                 "phpstan/phpstan-strict-rules": "^1.2.0",
                 "phpunit/phpunit": "~10.3.0 || ~10.2.0 || ~10.1.0"
@@ -796,7 +796,7 @@
             "homepage": "https://pmmp.io",
             "support": {
                 "issues": "https://github.com/pmmp/PocketMine-MP/issues",
-                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.15.0"
+                "source": "https://github.com/pmmp/PocketMine-MP/tree/5.16.0"
             },
             "funding": [
                 {
@@ -808,7 +808,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2024-04-25T10:52:30+00:00"
+            "time": "2024-06-13T17:55:18+00:00"
         },
         {
             "name": "pocketmine/raklib",
@@ -1117,23 +1117,25 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v6.4.7",
+            "version": "v6.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "78dde75f8f6dbbca4ec436a4b0087f7af02076d4"
+                "reference": "4d37529150e7081c51b3c5d5718c55a04a9503f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/78dde75f8f6dbbca4ec436a4b0087f7af02076d4",
-                "reference": "78dde75f8f6dbbca4ec436a4b0087f7af02076d4",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/4d37529150e7081c51b3c5d5718c55a04a9503f3",
+                "reference": "4d37529150e7081c51b3c5d5718c55a04a9503f3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "symfony/polyfill-ctype": "~1.8",
-                "symfony/polyfill-mbstring": "~1.8",
-                "symfony/process": "^5.4|^6.4"
+                "symfony/polyfill-mbstring": "~1.8"
+            },
+            "require-dev": {
+                "symfony/process": "^5.4|^6.4|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -1161,7 +1163,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v6.4.7"
+                "source": "https://github.com/symfony/filesystem/tree/v6.4.8"
             },
             "funding": [
                 {
@@ -1177,7 +1179,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-18T09:22:46+00:00"
+            "time": "2024-05-31T14:49:08+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1337,67 +1339,6 @@
                 }
             ],
             "time": "2024-01-29T20:11:03+00:00"
-        },
-        {
-            "name": "symfony/process",
-            "version": "v6.4.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "cdb1c81c145fd5aa9b0038bab694035020943381"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/cdb1c81c145fd5aa9b0038bab694035020943381",
-                "reference": "cdb1c81c145fd5aa9b0038bab694035020943381",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Process\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Executes commands in sub-processes",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/process/tree/v6.4.7"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-04-18T09:22:46+00:00"
         }
     ],
     "packages-dev": [
