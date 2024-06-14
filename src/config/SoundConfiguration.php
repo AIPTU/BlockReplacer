@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-use aiptu\sounds\SoundFactory;
-use aiptu\sounds\SoundImpl;
+use aiptu\libsounds\SoundBuilder;
+use aiptu\libsounds\SoundInstance;
+use aiptu\libsounds\SoundTypes;
 use pocketmine\math\Vector3;
 use pocketmine\world\World;
 use function trim;
@@ -22,8 +23,8 @@ use function trim;
 class SoundConfiguration {
 	public function __construct(
 		private bool $enabled,
-		private ?SoundImpl $from,
-		private ?SoundImpl $to,
+		private ?SoundInstance $from,
+		private ?SoundInstance $to,
 	) {}
 
 	/**
@@ -36,8 +37,8 @@ class SoundConfiguration {
 		$to = ConfigurationHelper::readString($data, 'to');
 		$instance = new self(
 			ConfigurationHelper::readBool($data, 'enabled'),
-			(trim($from) === '') ? null : SoundFactory::create($from, $volume, $pitch),
-			(trim($to) === '') ? null : SoundFactory::create($to, $volume, $pitch),
+			(trim($from) === '') ? null : SoundBuilder::create(SoundTypes::fromValue($from), $volume, $pitch),
+			(trim($to) === '') ? null : SoundBuilder::create(SoundTypes::fromValue($to), $volume, $pitch),
 		);
 		ConfigurationHelper::checkForUnread($data);
 		return $instance;
@@ -57,7 +58,7 @@ class SoundConfiguration {
 		}
 	}
 
-	private function add(World $world, Vector3 $position, SoundImpl $sound) : void {
+	private function add(World $world, Vector3 $position, SoundInstance $sound) : void {
 		if (!$this->enabled) {
 			return;
 		}
