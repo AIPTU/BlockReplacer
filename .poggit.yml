@@ -5,12 +5,4 @@ projects:
   BlockReplacer:
     path: ""
     icon: "icon.png"
-    libs:
-      - src: LatamPMDevs/UpdateNotifier/UpdateNotifier
-        version: ^3.0.0
-      - src: AIPTU/Sounds/Sounds
-        version: ^1.3
-    lint:
-      phpstan: false
-      syntaxError: false
 ...
