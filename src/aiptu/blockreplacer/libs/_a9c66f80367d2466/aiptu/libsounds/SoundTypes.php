@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace aiptu\blockreplacer\libs\_d82fc3abef7c3055\aiptu\libsounds;
+namespace aiptu\blockreplacer\libs\_a9c66f80367d2466\aiptu\libsounds;
 
 enum SoundTypes : string {
 	case AMBIENT_BASALT_DELTAS_ADDITIONS = 'ambient.basalt_deltas.additions';
@@ -108,6 +108,8 @@ enum SoundTypes : string {
 	case BLOCK_MANGROVE_ROOTS_HIT = 'block.mangrove_roots.hit';
 	case BLOCK_MANGROVE_ROOTS_PLACE = 'block.mangrove_roots.place';
 	case BLOCK_MANGROVE_ROOTS_STEP = 'block.mangrove_roots.step';
+	case BLOCK_MOB_SPAWNER_BREAK = 'block.mob_spawner.break';
+	case BLOCK_MOB_SPAWNER_STEP = 'block.mob_spawner.step';
 	case BLOCK_MUD_BREAK = 'block.mud.break';
 	case BLOCK_MUD_FALL = 'block.mud.fall';
 	case BLOCK_MUD_HIT = 'block.mud.hit';
@@ -1332,6 +1334,9 @@ enum SoundTypes : string {
 	case UI_CARTOGRAPHY_TABLE_TAKE_RESULT = 'ui.cartography_table.take_result';
 	case UI_DRAWER_CLOSE = 'ui.drawer_close';
 	case UI_DRAWER_OPEN = 'ui.drawer_open';
+	case UI_HARDCORE_DISABLE = 'ui.hardcore_disable';
+	case UI_HARDCORE_ENABLE = 'ui.hardcore_enable';
+	case UI_HARDCORE_TOGGLE_PRESS = 'ui.hardcore_toggle_press';
 	case UI_LOOM_SELECT_PATTERN = 'ui.loom.select_pattern';
 	case UI_LOOM_TAKE_RESULT = 'ui.loom.take_result';
 	case UI_STONECUTTER_TAKE_RESULT = 'ui.stonecutter.take_result';
@@ -1386,6 +1391,7 @@ enum SoundTypes : string {
 	case VAULT_INSERT_ITEM_FAIL = 'vault.insert_item_fail';
 	case VAULT_OPEN_SHUTTER = 'vault.open_shutter';
 	case VAULT_PLACE = 'vault.place';
+	case VAULT_REJECT_REWARDED_PLAYER = 'vault.reject_rewarded_player';
 	case VAULT_STEP = 'vault.step';
 	case VR_STUTTERTURN = 'vr.stutterturn';
 	case WIND_CHARGE_BURST = 'wind_charge.burst';
