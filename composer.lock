@@ -67,16 +67,16 @@
         },
         {
             "name": "aiptu/libsounds",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/AIPTU/libsounds.git",
-                "reference": "4de89a8646334f5d8d14313a6c8cc56b54ab867a"
+                "reference": "77bd2b79c676f0c3a8d3d97bb09a4c96d7fbc5e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/AIPTU/libsounds/zipball/4de89a8646334f5d8d14313a6c8cc56b54ab867a",
-                "reference": "4de89a8646334f5d8d14313a6c8cc56b54ab867a",
+                "url": "https://api.github.com/repos/AIPTU/libsounds/zipball/77bd2b79c676f0c3a8d3d97bb09a4c96d7fbc5e2",
+                "reference": "77bd2b79c676f0c3a8d3d97bb09a4c96d7fbc5e2",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
             "description": "A PocketMine-MP library for managing Minecraft Bedrock Edition sounds.",
             "support": {
                 "issues": "https://github.com/AIPTU/libsounds/issues",
-                "source": "https://github.com/AIPTU/libsounds/tree/v1.0.2"
+                "source": "https://github.com/AIPTU/libsounds/tree/v1.0.3"
             },
-            "time": "2024-06-14T10:01:45+00:00"
+            "time": "2024-08-16T22:29:31+00:00"
         },
         {
             "name": "brick/math",
