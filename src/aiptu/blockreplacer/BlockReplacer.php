@@ -17,8 +17,9 @@ use aiptu\blockreplacer\config\BadConfigurationException;
 use aiptu\blockreplacer\config\Configuration;
 use aiptu\blockreplacer\data\BlockDataManager;
 use aiptu\blockreplacer\task\TaskHandler;
-use aiptu\sounds\SoundFactory;
+use aiptu\libsounds\SoundBuilder;
 use JackMD\UpdateNotifier\UpdateNotifier;
+use pocketmine\plugin\DisablePluginException;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\world\World;
@@ -30,12 +31,10 @@ class BlockReplacer extends PluginBase {
 
 	private Configuration $configuration;
 
-	public function onEnable() : void {
+	protected function onEnable() : void {
 		self::setInstance($this);
 
-		if (!$this->validateVirions()) {
-			return;
-		}
+		$this->validateVirions();
 
 		UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
 
@@ -43,9 +42,7 @@ class BlockReplacer extends PluginBase {
 			$this->configuration = Configuration::fromData($this->getConfig()->getAll());
 		} catch (BadConfigurationException $e) {
 			$this->getLogger()->alert('Failed to load the configuration: ' . $e->getMessage());
-			$this->getLogger()->alert('Please fix the errors and restart the server.');
-			$this->getServer()->getPluginManager()->disablePlugin($this);
-			return;
+			throw new DisablePluginException();
 		}
 
 		$this->getScheduler()->scheduleRepeatingTask(new TaskHandler(), 20);
@@ -62,22 +59,22 @@ class BlockReplacer extends PluginBase {
 	}
 
 	public function checkWorld(World $world) : bool {
-		$blacklist = $this->getConfiguration()->getWorld()->isWorldBlacklistEnabled();
-		$whitelist = $this->getConfiguration()->getWorld()->isWorldWhitelistEnabled();
 		$world_name = $world->getFolderName();
+		$worldConfig = $this->getConfiguration()->getWorld();
 
-		if ($blacklist === $whitelist) {
+		$isBlacklistEnabled = $worldConfig->isWorldBlacklistEnabled();
+		$isWhitelistEnabled = $worldConfig->isWorldWhitelistEnabled();
+
+		if ($isBlacklistEnabled === $isWhitelistEnabled) {
 			return true;
 		}
 
-		if ($blacklist) {
-			$disallowed_worlds = $this->getConfiguration()->getWorld()->getBlacklistedWorlds();
-			return !in_array($world_name, $disallowed_worlds, true);
+		if ($isBlacklistEnabled) {
+			return !in_array($world_name, $worldConfig->getBlacklistedWorlds(), true);
 		}
 
-		if ($whitelist) {
-			$allowed_worlds = $this->getConfiguration()->getWorld()->getWhitelistedWorlds();
-			return in_array($world_name, $allowed_worlds, true);
+		if ($isWhitelistEnabled) {
+			return in_array($world_name, $worldConfig->getWhitelistedWorlds(), true);
 		}
 
 		return false;
@@ -85,24 +82,20 @@ class BlockReplacer extends PluginBase {
 
 	/**
 	 * Checks if the required virions/libraries are present before enabling the plugin.
+	 *
+	 * @throws DisablePluginException
 	 */
-	private function validateVirions() : bool {
+	private function validateVirions() : void {
 		$requiredVirions = [
-			'Sounds' => SoundFactory::class,
+			'libsounds' => SoundBuilder::class,
 			'UpdateNotifier' => UpdateNotifier::class,
 		];
-
-		$return = true;
 
 		foreach ($requiredVirions as $name => $class) {
 			if (!class_exists($class)) {
 				$this->getLogger()->error($name . ' virion was not found. Download BlockReplacer at https://poggit.pmmp.io/p/BlockReplacer.');
-				$this->getServer()->getPluginManager()->disablePlugin($this);
-				$return = false;
-				break;
+				throw new DisablePluginException();
 			}
 		}
-
-		return $return;
 	}
 }
