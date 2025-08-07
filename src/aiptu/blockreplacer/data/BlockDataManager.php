@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2024 AIPTU
+ * Copyright (c) 2021-2025 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -28,7 +28,7 @@ class BlockDataManager {
 	 * Add or overwrite a BlockData object in the map.
 	 */
 	public function addBlockData(BlockData $blockData) : void {
-		$key = $this->getBlockDataKey($blockData->getPosition());
+		$key = self::getBlockDataKey($blockData->getPosition());
 		$this->blockDataMap[$key] = $blockData;
 	}
 
@@ -36,7 +36,7 @@ class BlockDataManager {
 	 * Remove a BlockData object from the map based on its reference.
 	 */
 	public function removeBlockData(BlockData $blockData) : void {
-		$key = $this->getBlockDataKey($blockData->getPosition());
+		$key = self::getBlockDataKey($blockData->getPosition());
 		unset($this->blockDataMap[$key]);
 	}
 
@@ -44,7 +44,7 @@ class BlockDataManager {
 	 * Get a BlockData object from the map based on the position.
 	 */
 	public function getBlockData(Position $position) : ?BlockData {
-		$key = $this->getBlockDataKey($position);
+		$key = self::getBlockDataKey($position);
 		return $this->blockDataMap[$key] ?? null;
 	}
 
@@ -69,7 +69,7 @@ class BlockDataManager {
 	/**
 	 * Generate a unique key for the BlockData based on its position.
 	 */
-	private function getBlockDataKey(Position $position) : string {
+	private static function getBlockDataKey(Position $position) : string {
 		return Utils::serializePosition($position);
 	}
 }

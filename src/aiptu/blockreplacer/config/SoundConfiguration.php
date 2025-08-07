@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2024 AIPTU
+ * Copyright (c) 2021-2025 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\config;
 
-use aiptu\blockreplacer\libs\_fa754d22e2b4bcc5\aiptu\libsounds\SoundBuilder;
-use aiptu\blockreplacer\libs\_fa754d22e2b4bcc5\aiptu\libsounds\SoundInstance;
-use aiptu\blockreplacer\libs\_fa754d22e2b4bcc5\aiptu\libsounds\SoundTypes;
+use aiptu\blockreplacer\libs\_dcb552a6dc3cf49b\aiptu\libsounds\SoundBuilder;
+use aiptu\blockreplacer\libs\_dcb552a6dc3cf49b\aiptu\libsounds\SoundInstance;
+use aiptu\blockreplacer\libs\_dcb552a6dc3cf49b\aiptu\libsounds\SoundTypes;
 use pocketmine\math\Vector3;
 use pocketmine\world\World;
 use function trim;

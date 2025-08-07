@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021-2024 AIPTU
+ * Copyright (c) 2021-2025 AIPTU
  *
  * For the full copyright and license information, please view
  * the LICENSE.md file that was distributed with this source code.
@@ -46,9 +46,9 @@ class EventHandler implements Listener {
 		$blockDataManager = BlockDataManager::getInstance();
 
 		foreach ($blockConfig->getListBlocks() as $data => $v) {
-			[$previousBlock, $nextBlock, $time] = $this->parseBlockData($data, $defaultReplace, $defaultTime);
+			[$previousBlock, $nextBlock, $time] = self::parseBlockData($data, $defaultReplace, $defaultTime);
 
-			if ($block->isSameState($previousBlock) && !$this->shouldCancelEvent($player, $world, $blockReplacer)) {
+			if ($block->isSameState($previousBlock) && !self::shouldCancelEvent($player, $world, $blockReplacer)) {
 				$blockData = $blockDataManager->getBlockData($position);
 				if ($blockData === null) {
 					$blockData = new BlockData($position, $previousBlock, $nextBlock, $time);
@@ -58,12 +58,12 @@ class EventHandler implements Listener {
 				$blockData->replaceBlock($player);
 
 				if (isset($v['drops'])) {
-					$drops = $this->applyChanceToDrops($v['drops']);
+					$drops = self::applyChanceToDrops($v['drops']);
 					$event->setDrops($drops);
 				}
 
 				if (isset($v['experience'])) {
-					$xp = $this->applyChanceToExperience($v['experience']);
+					$xp = self::applyChanceToExperience($v['experience']);
 					$event->setXpDropAmount($xp);
 				}
 
@@ -91,11 +91,11 @@ class EventHandler implements Listener {
 		}
 	}
 
-	private function shouldCancelEvent(Player $player, World $world, BlockReplacer $blockReplacer) : bool {
+	private static function shouldCancelEvent(Player $player, World $world, BlockReplacer $blockReplacer) : bool {
 		return !$player->hasPermission(PermissionConfiguration::NAME) || !$blockReplacer->checkWorld($world);
 	}
 
-	private function parseBlockData(string $data, string $defaultReplace, int $defaultTime) : array {
+	private static function parseBlockData(string $data, string $defaultReplace, int $defaultTime) : array {
 		$dataParts = array_map('trim', explode('=', $data, 3));
 		$numParts = count($dataParts);
 
@@ -110,7 +110,7 @@ class EventHandler implements Listener {
 		];
 	}
 
-	private function applyChanceToDrops(array $drops) : array {
+	private static function applyChanceToDrops(array $drops) : array {
 		$result = [];
 		foreach ($drops as $drop) {
 			if (isset($drop['item'], $drop['chance']) && Utils::checkChance($drop['chance'])) {
@@ -122,7 +122,7 @@ class EventHandler implements Listener {
 		return $result;
 	}
 
-	private function applyChanceToExperience(array $experience) : int {
+	private static function applyChanceToExperience(array $experience) : int {
 		if (isset($experience['amount'], $experience['chance']) && Utils::checkChance($experience['chance'])) {
 			return Utils::parseAmount($experience['amount']);
 		}
