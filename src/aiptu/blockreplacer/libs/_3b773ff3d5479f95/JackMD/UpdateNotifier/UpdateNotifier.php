@@ -31,9 +31,9 @@ declare(strict_types = 1);
  * ------------------------------------------------------------------------
  */
 
-namespace aiptu\blockreplacer\libs\_dcb552a6dc3cf49b\JackMD\UpdateNotifier;
+namespace aiptu\blockreplacer\libs\_3b773ff3d5479f95\JackMD\UpdateNotifier;
 
-use aiptu\blockreplacer\libs\_dcb552a6dc3cf49b\JackMD\UpdateNotifier\task\UpdateNotifyTask;
+use aiptu\blockreplacer\libs\_3b773ff3d5479f95\JackMD\UpdateNotifier\task\UpdateNotifyTask;
 use pocketmine\Server;
 
 class UpdateNotifier {

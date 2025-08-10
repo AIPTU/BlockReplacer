@@ -123,6 +123,33 @@ sounds:
   # The name of the sound to be played when replacing the block after it.
   to: random.explode
 
+# Notification Settings
+notifications:
+  # Enable or disable all notifications.
+  enabled: true
+  # The type of notification to use.
+  # Can be 'actionbar', 'title', 'subtitle', or 'popup'.
+  type: "actionbar"
+  # Show a notification when a block is replaced.
+  show-on-replace: true
+  # Show a countdown before a block is restored.
+  show-countdown: true
+  # Show a notification when a block is restored.
+  show-on-restore: true
+  # Start the countdown at a specific time (in seconds).
+  countdown-start: 5
+  # The radius (in blocks) around a block to send notifications.
+  # Set to 0 to send notifications only to the player who broke the block.
+  notification-radius: 0
+  # Messages used for notifications.
+  messages:
+    # Message for when a block is broken and replaced.
+    replace: "§6» §e{from} §6→ §b{to} §8[§d{time}s§8] §6«"
+    # Message for the countdown before a block is restored.
+    countdown: "§c⚠ §f{block} §c→ §e{time}s §6★"
+    # Message for when a block is restored.
+    restore: "§a✓ §f{block} §a→ §2RESTORED §a✓"
+
 # World Configuration
 worlds:
   # Set this to true if you want to use the blacklisted-worlds setting.

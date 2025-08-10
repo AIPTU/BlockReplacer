@@ -25,6 +25,8 @@ use function time;
 class BlockData {
 	private bool $isRestored = true;
 	private int $lastAccessTime = -1;
+	private int $lastCountdownSent = -1;
+	private ?string $blockBreaker = null;
 
 	public function __construct(
 		private readonly Position $position,
@@ -87,6 +89,38 @@ class BlockData {
 	 */
 	public function setRestored(bool $isRestored) : void {
 		$this->isRestored = $isRestored;
+
+		if ($isRestored) {
+			$this->lastCountdownSent = -1;
+		}
+	}
+
+	/**
+	 * Get the last countdown number that was sent.
+	 */
+	public function getLastCountdownSent() : int {
+		return $this->lastCountdownSent;
+	}
+
+	/**
+	 * Set the last countdown number that was sent.
+	 */
+	public function setLastCountdownSent(int $countdown) : void {
+		$this->lastCountdownSent = $countdown;
+	}
+
+	/**
+	 * Set the player who broke the block.
+	 */
+	public function setBlockBreaker(?Player $player) : void {
+		$this->blockBreaker = $player !== null ? $player->getName() : null;
+	}
+
+	/**
+	 * Get the name of the player who broke the block.
+	 */
+	public function getBlockBreaker() : ?string {
+		return $this->blockBreaker;
 	}
 
 	/**
@@ -100,6 +134,7 @@ class BlockData {
 		}
 
 		$this->setLastAccessTime(time());
+		$this->setBlockBreaker($player);
 
 		$ev = new BlockReplaceEvent($player, $this->getReplacementBlock(), $this->getPosition());
 		$ev->call();
