@@ -20,6 +20,7 @@ class Configuration {
 		private ParticleConfiguration $particle_configuration,
 		private SoundConfiguration $sound_configuration,
 		private WorldConfiguration $world_configuration,
+		private NotificationConfiguration $notification_configuration,
 	) {}
 
 	/**
@@ -32,8 +33,9 @@ class Configuration {
 		$particle_configuration = ParticleConfiguration::fromData(ConfigurationHelper::readMap($data, 'particles'));
 		$sound_configuration = SoundConfiguration::fromData(ConfigurationHelper::readMap($data, 'sounds'));
 		$world_configuration = WorldConfiguration::fromData(ConfigurationHelper::readMap($data, 'worlds'));
+		$notification_configuration = NotificationConfiguration::fromData(ConfigurationHelper::readMap($data, 'notifications'));
 		ConfigurationHelper::checkForUnread($data);
-		return new self($auto_pickup_configuration, $block_configuration, $particle_configuration, $sound_configuration, $world_configuration);
+		return new self($auto_pickup_configuration, $block_configuration, $particle_configuration, $sound_configuration, $world_configuration, $notification_configuration);
 	}
 
 	public function getAutoPickup() : AutoPickupConfiguration {
@@ -54,5 +56,9 @@ class Configuration {
 
 	public function getWorld() : WorldConfiguration {
 		return $this->world_configuration;
+	}
+
+	public function getNotification() : NotificationConfiguration {
+		return $this->notification_configuration;
 	}
 }

@@ -16,6 +16,7 @@ namespace aiptu\blockreplacer;
 use aiptu\blockreplacer\config\PermissionConfiguration;
 use aiptu\blockreplacer\data\BlockData;
 use aiptu\blockreplacer\data\BlockDataManager;
+use aiptu\blockreplacer\notification\NotificationManager;
 use aiptu\blockreplacer\utils\ItemParser;
 use aiptu\blockreplacer\utils\Utils;
 use pocketmine\event\block\BlockBreakEvent;
@@ -56,6 +57,8 @@ class EventHandler implements Listener {
 				}
 
 				$blockData->replaceBlock($player);
+
+				NotificationManager::sendBlockReplaceNotification($player, $blockData);
 
 				if (isset($v['drops'])) {
 					$drops = self::applyChanceToDrops($v['drops']);
