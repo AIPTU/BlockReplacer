@@ -13,10 +13,6 @@ declare(strict_types=1);
 
 namespace aiptu\blockreplacer\utils;
 
-use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
-use DaPigGuy\PiggyCustomEnchants\enchants\CustomEnchant;
-use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
-use DaPigGuy\PiggyCustomEnchants\utils\Utils as PiggyUtils;
 use pocketmine\block\Block;
 use pocketmine\block\Crops;
 use pocketmine\block\Flowable;
@@ -26,12 +22,10 @@ use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\StringToEnchantmentParser;
 use pocketmine\item\Item;
-use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\StringToItemParser;
 use pocketmine\item\VanillaItems;
 use pocketmine\utils\TextFormat;
 use function array_map;
-use function class_exists;
 use function explode;
 use function is_array;
 use function str_contains;
@@ -97,7 +91,7 @@ class ItemParser {
 	 * @return Item|null the parsed item, or null if parsing fails
 	 */
 	public static function parseItemFromString(string $itemString) : ?Item {
-		return StringToItemParser::getInstance()->parse($itemString) ?? LegacyStringToItemParser::getInstance()->parse($itemString);
+		return StringToItemParser::getInstance()->parse($itemString);
 	}
 
 	/**
@@ -138,7 +132,6 @@ class ItemParser {
 	 */
 	public static function parseEnchantments(Item $item, array $enchantments) : void {
 		$enchantmentParser = StringToEnchantmentParser::getInstance();
-		$piggyCustomEnchantsExists = class_exists(PiggyCustomEnchants::class);
 
 		foreach ($enchantments as $enchantmentData) {
 			if (!is_array($enchantmentData) || !isset($enchantmentData['name'], $enchantmentData['level'])) {
@@ -148,13 +141,7 @@ class ItemParser {
 			$enchantmentName = (string) $enchantmentData['name'];
 			$enchantmentLevel = (int) $enchantmentData['level'];
 
-			$enchantment = null;
-
-			if ($piggyCustomEnchantsExists) {
-				$enchantment = CustomEnchantManager::getEnchantmentByName($enchantmentName);
-			} else {
-				$enchantment = $enchantmentParser->parse($enchantmentName);
-			}
+			$enchantment = $enchantmentParser->parse($enchantmentName);
 
 			if ($enchantment !== null && self::isEnchantmentValid($enchantment, $item, $enchantmentLevel)) {
 				$item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentLevel));
@@ -172,10 +159,6 @@ class ItemParser {
 	 * @return bool true if the enchantment is valid, false otherwise
 	 */
 	public static function isEnchantmentValid(Enchantment $enchantment, Item $item, int $level) : bool {
-		if ($enchantment instanceof CustomEnchant) {
-			return PiggyUtils::itemMatchesItemType($item, $enchantment->getItemType()) && self::isEnchantmentLevelValid($enchantment, $level);
-		}
-
 		return AvailableEnchantmentRegistry::getInstance()->isAvailableForItem($enchantment, $item) && self::isEnchantmentLevelValid($enchantment, $level);
 	}
 
