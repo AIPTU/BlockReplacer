@@ -102,22 +102,26 @@ class ItemParser {
 	 * @return Block the parsed block, or a default Block object if parsing fails
 	 */
 	public static function parseBlock(string $blockString) : Block {
+		$dataValue = 0;
+		if (str_contains($blockString, ':')) {
+			$parts = explode(':', $blockString);
+			$blockString = $parts[0];
+			if (isset($parts[1])) {
+				$dataValue = (int) $parts[1];
+			}
+		}
+
 		$parsedItem = self::parseItemFromString($blockString);
 		if ($parsedItem === null) {
-			return VanillaBlocks::AIR(); // Return a default Block object if parsing fails
+			return VanillaBlocks::AIR();
 		}
 
 		$parsedBlock = $parsedItem->getBlock();
 
-		// Check if the block string has the format "string:id"
-		if (str_contains($blockString, ':')) {
-			[$blockName, $blockId] = explode(':', $blockString);
-
-			// Check if the parsed block is either an instance of Crops or Flowable
+		if ($dataValue > 0) {
 			if ($parsedBlock instanceof Crops || $parsedBlock instanceof Flowable) {
-				$newAge = (int) $blockId;
 				/** @phpstan-ignore-next-line */
-				$parsedBlock->setAge($newAge);
+				$parsedBlock->setAge($dataValue);
 			}
 		}
 

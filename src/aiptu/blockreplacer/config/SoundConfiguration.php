@@ -28,7 +28,7 @@ class SoundConfiguration {
 	) {}
 
 	/**
-	 * @param array<int|string, mixed> $data
+	 * @param array<string, mixed> $data
 	 */
 	public static function fromData(array $data) : self {
 		$volume = ConfigurationHelper::readNumber($data, 'volume');
