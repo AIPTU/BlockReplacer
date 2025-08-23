@@ -23,6 +23,7 @@ use function is_float;
 use function is_int;
 use function is_scalar;
 use function is_string;
+use function trim;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
 
@@ -94,10 +95,14 @@ class ConfigurationHelper {
 	/**
 	 * @param array<string, mixed> $data
 	 */
-	public static function readString(array &$data, string $key) : string {
+	public static function readString(array &$data, string $key, bool $allowEmpty = true) : string {
 		$value = self::read($data, $key);
 		if (!is_string($value)) {
 			throw new BadConfigurationException("Expected value of key '{$key}' to be a string, got " . gettype($value) . (is_scalar($value) ? " ({$value})" : ''));
+		}
+
+		if (!$allowEmpty && trim($value) === '') {
+			throw new BadConfigurationException("Expected value of key '{$key}' to be a non-empty string");
 		}
 
 		return $value;

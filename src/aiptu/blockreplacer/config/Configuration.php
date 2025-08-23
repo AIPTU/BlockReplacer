@@ -24,7 +24,7 @@ class Configuration {
 	) {}
 
 	/**
-	 * @param array<int|string, mixed> $data
+	 * @param array<string, mixed> $data
 	 */
 	public static function fromData(array $data) : self {
 		$permission_configuration = PermissionConfiguration::fromData(ConfigurationHelper::readMap($data, 'permission'));

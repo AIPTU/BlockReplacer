@@ -17,15 +17,11 @@ use aiptu\blockreplacer\config\PermissionConfiguration;
 use aiptu\blockreplacer\data\BlockData;
 use aiptu\blockreplacer\data\BlockDataManager;
 use aiptu\blockreplacer\notification\NotificationManager;
-use aiptu\blockreplacer\utils\ItemParser;
-use aiptu\blockreplacer\utils\Utils;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
+use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\world\World;
-use function array_map;
-use function count;
-use function explode;
 
 class EventHandler implements Listener {
 	/**
@@ -42,94 +38,73 @@ class EventHandler implements Listener {
 		$blockReplacer = BlockReplacer::getInstance();
 		$blockConfig = $blockReplacer->getConfiguration()->getBlock();
 		$autoPickupConfig = $blockReplacer->getConfiguration()->getAutoPickup();
-		$defaultReplace = $blockConfig->getDefaultReplace();
-		$defaultTime = $blockConfig->getDefaultTime();
 		$blockDataManager = BlockDataManager::getInstance();
 
-		foreach ($blockConfig->getListBlocks() as $data => $v) {
-			[$previousBlock, $nextBlock, $time] = self::parseBlockData($data, $defaultReplace, $defaultTime);
+		if (self::shouldCancelEvent($player, $world, $blockReplacer)) {
+			return;
+		}
 
-			if ($block->isSameState($previousBlock) && !self::shouldCancelEvent($player, $world, $blockReplacer)) {
-				$blockData = $blockDataManager->getBlockData($position);
-				if ($blockData === null) {
-					$blockData = new BlockData($position, $previousBlock, $nextBlock, $time);
-					$blockDataManager->addBlockData($blockData);
-				}
+		$blockRule = $blockConfig->getBlockRule($block);
+		if ($blockRule === null) {
+			return;
+		}
 
-				$blockData->replaceBlock($player);
+		$blockData = $blockDataManager->getBlockData($position);
+		if ($blockData === null) {
+			$blockData = new BlockData(
+				$position,
+				$blockRule->getFromBlock(),
+				$blockRule->getToBlock(),
+				$blockRule->getTime()
+			);
+			$blockDataManager->addBlockData($blockData);
+		}
 
-				NotificationManager::sendBlockReplaceNotification($player, $blockData);
+		$blockData->replaceBlock($player);
 
-				if (isset($v['drops'])) {
-					$drops = self::applyChanceToDrops($v['drops']);
-					$event->setDrops($drops);
-				}
+		NotificationManager::sendBlockReplaceNotification($player, $blockData);
 
-				if (isset($v['experience'])) {
-					$xp = self::applyChanceToExperience($v['experience']);
-					$event->setXpDropAmount($xp);
-				}
+		if ($blockRule->hasDropRules()) {
+			$drops = $blockRule->generateDrops();
+			$event->setDrops($drops);
+		}
 
-				if ($autoPickupConfig->isAutoPickupEnabled()) {
-					$inventory = $player->getInventory();
-					$drops = $event->getDrops();
-					$xpAmount = $event->getXpDropAmount();
+		if ($blockRule->hasExperienceRule()) {
+			$xp = $blockRule->generateExperience();
+			$event->setXpDropAmount($xp);
+		}
 
-					foreach ($drops as $drop) {
-						if ($inventory->canAddItem($drop)) {
-							$inventory->addItem($drop);
-						} else {
-							$world->dropItem($position->add(0.5, 0.5, 0.5), $drop);
-						}
-					}
-
-					$player->getXpManager()->addXp($xpAmount);
-
-					$event->setDrops([]);
-					$event->setXpDropAmount(0);
-				}
-
-				break;
-			}
+		if ($autoPickupConfig->isAutoPickupEnabled()) {
+			self::handleAutoPickup($player, $event, $position, $world);
 		}
 	}
 
+	/**
+	 * Check if the event should be cancelled.
+	 */
 	private static function shouldCancelEvent(Player $player, World $world, BlockReplacer $blockReplacer) : bool {
 		return !$player->hasPermission(PermissionConfiguration::NAME) || !$blockReplacer->checkWorld($world);
 	}
 
-	private static function parseBlockData(string $data, string $defaultReplace, int $defaultTime) : array {
-		$dataParts = array_map('trim', explode('=', $data, 3));
-		$numParts = count($dataParts);
+	/**
+	 * Handle auto pickup functionality.
+	 */
+	private static function handleAutoPickup(Player $player, BlockBreakEvent $event, Vector3 $position, World $world) : void {
+		$inventory = $player->getInventory();
+		$drops = $event->getDrops();
+		$xpAmount = $event->getXpDropAmount();
 
-		$previousBlock = ItemParser::parseBlock($dataParts[0]);
-		$nextBlock = $numParts >= 2 ? ItemParser::parseBlock($dataParts[1]) : ItemParser::parseBlock($defaultReplace);
-		$time = $numParts >= 3 ? Utils::parseAmount($dataParts[2]) : $defaultTime;
-
-		return [
-			$previousBlock,
-			$nextBlock,
-			$time,
-		];
-	}
-
-	private static function applyChanceToDrops(array $drops) : array {
-		$result = [];
 		foreach ($drops as $drop) {
-			if (isset($drop['item'], $drop['chance']) && Utils::checkChance($drop['chance'])) {
-				$item = ItemParser::parseItem($drop);
-				$result[] = $item;
+			if ($inventory->canAddItem($drop)) {
+				$inventory->addItem($drop);
+			} else {
+				$world->dropItem($position->add(0.5, 0.5, 0.5), $drop);
 			}
 		}
 
-		return $result;
-	}
+		$player->getXpManager()->addXp($xpAmount);
 
-	private static function applyChanceToExperience(array $experience) : int {
-		if (isset($experience['amount'], $experience['chance']) && Utils::checkChance($experience['chance'])) {
-			return Utils::parseAmount($experience['amount']);
-		}
-
-		return 0;
+		$event->setDrops([]);
+		$event->setXpDropAmount(0);
 	}
 }
