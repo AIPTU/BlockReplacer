@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace aiptu\blockreplacer\utils;
 
 use pocketmine\block\Block;
-use pocketmine\block\Crops;
-use pocketmine\block\Flowable;
+use pocketmine\block\utils\Ageable;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\item\enchantment\AvailableEnchantmentRegistry;
 use pocketmine\item\enchantment\Enchantment;
@@ -28,6 +27,7 @@ use pocketmine\utils\TextFormat;
 use function array_map;
 use function explode;
 use function is_array;
+use function min;
 use function str_contains;
 
 class ItemParser {
@@ -104,11 +104,8 @@ class ItemParser {
 	public static function parseBlock(string $blockString) : Block {
 		$dataValue = 0;
 		if (str_contains($blockString, ':')) {
-			$parts = explode(':', $blockString);
-			$blockString = $parts[0];
-			if (isset($parts[1])) {
-				$dataValue = (int) $parts[1];
-			}
+			[$blockString, $dataValue] = explode(':', $blockString, 2);
+			$dataValue = (int) $dataValue;
 		}
 
 		$parsedItem = self::parseItemFromString($blockString);
@@ -119,9 +116,10 @@ class ItemParser {
 		$parsedBlock = $parsedItem->getBlock();
 
 		if ($dataValue > 0) {
-			if ($parsedBlock instanceof Crops || $parsedBlock instanceof Flowable) {
-				/** @phpstan-ignore-next-line */
-				$parsedBlock->setAge($dataValue);
+			if ($parsedBlock instanceof Ageable) {
+				$maxAge = $parsedBlock->getMaxAge();
+				$age = min($dataValue, $maxAge);
+				$parsedBlock = $parsedBlock->setAge($age);
 			}
 		}
 
@@ -176,11 +174,7 @@ class ItemParser {
 	 */
 	private static function isEnchantmentLevelValid(Enchantment $enchantment, int $level) : bool {
 		$maxLevel = $enchantment->getMaxLevel();
-		if ($level > $maxLevel) {
-			return false;
-		}
-
-		return !($level < 1);
+		return $level >= 1 && $level <= $maxLevel;
 	}
 
 	/**

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace aiptu\blockreplacer\libs\_29235721a4d510a4\aiptu\libsounds;
+namespace aiptu\blockreplacer\libs\_72490a5c9c384c0c\aiptu\libsounds;
 
 class InvalidSoundTypeException extends \Exception {
 	public function __construct(string $value) {
