@@ -1,5 +1,5 @@
 name: BlockReplacer
 main: aiptu\blockreplacer\BlockReplacer
 version: 3.0.2
-api: [5.5.0]
+api: [5.33.0]
 author: AIPTU
