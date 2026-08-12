@@ -15,7 +15,7 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer
       - run: composer install --ignore-platform-reqs
-      - uses: SOF3/pharynx@v0.2
+      - uses: SOF3/pharynx@0.3.8
         id: pharynx
         with:
           additional-assets: |
